@@ -1,5 +1,5 @@
 ﻿
-namespace OnTimeGCApi.UsersAll
+namespace OnTimeGCApi
 {
     public enum UserType
     {

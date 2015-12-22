@@ -3,8 +3,8 @@ namespace OnTimeGCApi.Logout
 {
     public class Logout
     {
-        public string ID;
-        public string Name;
-        public int SectionProcessTime;
+        public string ID { get; set; }
+        public string Name { get; set; }
+        public int SectionProcessTime { get; set; }
     }
 }

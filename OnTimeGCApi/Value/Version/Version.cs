@@ -3,12 +3,12 @@ namespace OnTimeGCApi.Version
 {
     public class Version
     {
-        public string APIVersion;
-        public string UserName;
-        public Server Server;
-        public ConfigDatabase ConfigDatabase;
-        public ApiDatabase ApiDatabase;
-        public Apilog ApiLog;
-        public int SectionProcessTime;
+        public string APIVersion { get; set; }
+        public string UserName { get; set; }
+        public Server Server { get; set; }
+        public DatabaseInfo ConfigDatabase { get; set; }
+        public DatabaseInfo ApiDatabase { get; set; }
+        public DatabaseInfo ApiLog { get; set; }
+        public int SectionProcessTime { get; set; }
     }
 }

@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 
-namespace OnTimeGCApi.UsersAll
+namespace OnTimeGCApi.Calendars
 {
-    public class UsersAll
+    public class Calendars
     {
-        public List<User> Users { get; set; }
+        public List<Id> IDs { get; set; }
         public int SectionProcessTime { get; set; }
     }
 }

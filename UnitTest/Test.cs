@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using OnTimeGCApi;
 using System;
+using System.Collections.Generic;
 
 namespace UnitTest
 {
@@ -16,7 +17,7 @@ namespace UnitTest
         [TestMethod]
         public void LoginWithValidCredentials()
         {
-            OnTimeGCApiClient client = new OnTimeGCApiClient(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
+            Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
             OnTimeGCApi.Login.Base result = client.Login("hs", "demo");
 
             Assert.AreEqual(true, result.IsAuthorized, "successful");
@@ -25,7 +26,7 @@ namespace UnitTest
         [TestMethod]
         public void LoginWithWrongCredentials()
         {
-            OnTimeGCApiClient client = new OnTimeGCApiClient(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
+            Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
             try
             {
                 client.Login("hs", "demo1");
@@ -42,7 +43,7 @@ namespace UnitTest
         [TestMethod]
         public void Version()
         {
-            OnTimeGCApiClient client = new OnTimeGCApiClient(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
+            Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
             OnTimeGCApi.Login.Base result = client.Login("hs", "demo");
             if (result.IsAuthorized)
             {
@@ -58,7 +59,7 @@ namespace UnitTest
         [TestMethod]
         public void UsersAll()
         {
-            OnTimeGCApiClient client = new OnTimeGCApiClient(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
+            Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
             OnTimeGCApi.Login.Base result = client.Login("hs", "demo");
             if (result.IsAuthorized)
             {
@@ -72,9 +73,42 @@ namespace UnitTest
         }
 
         [TestMethod]
+        public void UsersInfo()
+        {
+            Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
+            OnTimeGCApi.Login.Base result = client.Login("hs", "demo");
+            if (result.IsAuthorized)
+            {
+                OnTimeGCApi.UsersInfo.Base usersInfoResult = client.UsersInfo(null, new List<string>() { "H" }, null, null, null, null, null, null);
+                Assert.AreEqual(1, usersInfoResult.UsersInfo.IDs.Count);
+                Assert.AreEqual("harold.spitz@ontime.com", usersInfoResult.UsersInfo.IDs[0].Email);
+
+                return;
+            }
+
+            Assert.Fail("Login failed.");
+        }
+
+        [TestMethod]
+        public void Calendars()
+        {
+            Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
+            OnTimeGCApi.Login.Base result = client.Login("hs", "demo");
+            if (result.IsAuthorized)
+            {
+                OnTimeGCApi.Calendars.Base calendarsResult = client.Calendars(new List<string>() { "H", "10" }, null, null, DateTime.Now.AddMonths(-1), DateTime.Now.AddMonths(1));
+                Assert.AreEqual(2, calendarsResult.Calendars.IDs.Count);
+
+                return;
+            }
+
+            Assert.Fail("Login failed.");
+        }
+
+        [TestMethod]
         public void Logout()
         {
-            OnTimeGCApiClient client = new OnTimeGCApiClient(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
+            Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
             OnTimeGCApi.Login.Base result = client.Login("hs", "demo");
             if (result.IsAuthorized)
             {

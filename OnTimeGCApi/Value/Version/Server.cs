@@ -4,9 +4,9 @@ namespace OnTimeGCApi.Version
 {
     public class Server
     {
-        public string Name;
-        public string Version;
-        public string Platform;
-        public DateTime Time;
+        public string Name { get; set; }
+        public string Version { get; set; }
+        public string Platform { get; set; }
+        public DateTime Time { get; set; }
     }
 }

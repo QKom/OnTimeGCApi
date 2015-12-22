@@ -3,10 +3,51 @@ OnTime Groupcalendar API
 Tested with API Version 3, 4 and 5  
 
 #### Currently implemented methods  
-* `Login(string username, string password)`
-* `Logout()`
-* `UsersAll(List<string> items, List<string> excludeIds, bool includeNoAccess = false, UsersAll.UserType type = OnTimeGCApi.UsersAll.UserType.All)`
-* `Version()`
+##### Core:
+* [x] Calendars
+* [X] Login
+* [X] Logout
+* [X] UsersAll
+* [X] UsersInfo
+* [X] Version
+
+##### Extended:
+* [ ] AppointmentChange
+* [ ] AppointmentCreate
+* [ ] AppointmentInviteeStatus
+* [ ] AppointmentRead
+* [ ] AppointmentRemove
+* [ ] AppointmentRepeatDates
+* [ ] CustomFieldsList
+* [ ] FreeResources
+* [ ] FreeRooms
+* [ ] FreeTimeSearch
+* [ ] GroupList
+* [ ] GroupPrivateChange
+* [ ] GroupPrivateRemove
+* [ ] GroupUserIDs (multiple)
+* [ ] GroupUserIDs (single)
+* [ ] LanguageList
+* [ ] LanguageText
+* [ ] Legends
+* [ ] LegendsSet
+* [ ] LegendsSetsList
+* [ ] MailSend
+* [ ] NameFormats
+* [ ] NoticeAccept
+* [ ] NoticeDecline
+* [ ] NoticeUpdate
+* [ ] Notices
+* [ ] OutOfOfficeGet
+* [ ] OutOfOfficeSet
+* [ ] RegionList
+* [ ] RegionText
+* [ ] SettingsGet
+* [ ] SettingsSet
+* [ ] UserBusyInfo
+* [ ] UsersAccess
+* [ ] UsersPhoto
+* [ ] UsersSearch
 
 ## Requirements
 * [.Net Framework 4.0](http://www.microsoft.com/de-de/download/details.aspx?id=17718)

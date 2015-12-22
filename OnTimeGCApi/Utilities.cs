@@ -32,15 +32,15 @@ namespace OnTimeGCApi
 
         private static bool AcceptAllCertifications(object sender, X509Certificate certification, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }
 
-        public static string Post(Uri endPoint, string postData, Encoding enc, string referer = "")
+        public static string Post(Uri endPoint, string postData, string referer = "")
         {
             CookieContainer temp = new CookieContainer();
-            return Post(endPoint, postData, ref temp, enc, referer);
+            return Post(endPoint, postData, ref temp, referer);
         }
 
-        public static string Post(Uri endPoint, string postData, ref CookieContainer cc, Encoding enc, string referer = "")
+        public static string Post(Uri endPoint, string postData, ref CookieContainer cc, string referer = "")
         {
-            byte[] data = System.Text.Encoding.ASCII.GetBytes(postData);
+            byte[] data = System.Text.Encoding.UTF8.GetBytes(postData);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endPoint);
             ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(AcceptAllCertifications);
@@ -66,7 +66,7 @@ namespace OnTimeGCApi
             using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
             using (Stream responseStream = (response.ContentEncoding.ToLower().Contains("gzip") ? new GZipStream(response.GetResponseStream(), CompressionMode.Decompress) : response.GetResponseStream()))
 
-            using (StreamReader buffer = new StreamReader(responseStream, enc))
+            using (StreamReader buffer = new StreamReader(responseStream, Encoding.UTF8))
             {
                 return buffer.ReadToEnd();
             }
