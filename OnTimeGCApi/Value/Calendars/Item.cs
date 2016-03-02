@@ -44,6 +44,7 @@ namespace OnTimeGCApi.Calendars
         public List<string> Rooms { get; set; }
         public List<string> Resources { get; set; }
         public int Seq { get; set; }
+        public Dictionary<string, object> CustomFields { get; set; }
 
         public override string ToString()
         {
