@@ -4,7 +4,7 @@ Tested with API Version 3, 4 and 5
 
 #### Currently implemented methods  
 ##### Core:
-* [x] Calendars
+* [ ] Calendars
 * [X] Login
 * [X] Logout
 * [X] UsersAll

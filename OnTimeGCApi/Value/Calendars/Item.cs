@@ -21,9 +21,11 @@ namespace OnTimeGCApi.Calendars
         // TODO: ApptType string -> int
         public string ApptType { get; set; }
         public string AppointmentType { get { return (this.apptTypeMap.ContainsKey(this.ApptType) ? this.apptTypeMap[this.ApptType] : "NotImplemented");} }
-        public string StartDT { get; set; }
-        public string EndDT { get; set; }
+        public DateTime StartDT { get; set; }
+        public DateTime EndDT { get; set; }
+        public string RepIns { get; set; }
         public string Subject { get; set; }
+        public string Location { get; set; }
         public string From { get; set; }
         public List<string> Categories { get; set; }
         public int BodyLength { get; set; }
