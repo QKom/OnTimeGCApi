@@ -9,14 +9,20 @@ namespace ExampleApplication
         static void Main(string[] args)
         {
             Client client = new Client("ApiExplorer", "5", 5, "https://demo.ontimesuite.com", "/ontime/ontimegcclient.nsf/");
-            OnTimeGCApi.Login.Base result = client.Login("ch", "demo");
+            LoginResult result = client.Login("ch", "demo");
             if (result.IsAuthorized)
             {
-                //OnTimeGCApi.Version.Base versionResult = client.Version();
-                //OnTimeGCApi.UsersAll.Base usersAllResult = client.UsersAll(null, null);
-                //OnTimeGCApi.UsersInfo.Base usersInfoResult = client.UsersInfo(null, new List<string>() { "H" }, null, null, null, null, null, null);
-                OnTimeGCApi.Calendars.Base calendarsResult = client.Calendars(new List<string>() { "U", "10" }, null, null, DateTime.Now.AddDays(-2), DateTime.Now.AddDays(2));
-                OnTimeGCApi.Logout.Base logoutResult = client.Logout();
+                VersionResult versionResult = client.Version();
+                UsersAllResult usersAllResult = client.UsersAll();
+                UsersInfoResult usersInfoResult = client.UsersInfo(onTimeIds: new List<string>() { "H" });
+                CalendarsResult calendarsResult = client.Calendars(DateTime.Now.AddDays(-2), DateTime.Now.AddDays(2), onTimeIds: new List<string>() { "U", "10" });
+
+                DateTime baseValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1, 12, 0, 0, DateTimeKind.Utc);
+                AppointmentCreateResult appointmentCreateResult = client.AppointmentCreate(EventType.Appointment, "U", baseValue, baseValue.AddMinutes(30), "TestSubject1");
+                AppointmentChangeResult appointmentChangeResult = client.AppointmentChange("U", appointmentCreateResult.AppointmentCreate.NewUnID, baseValue, baseValue.AddHours(1), subject: "TestSubject2");
+                AppointmentRemoveResult appointmentRemoveResult = client.AppointmentRemove("U", appointmentCreateResult.AppointmentCreate.NewUnID);
+
+                LogoutResult logoutResult = client.Logout();
             }
         }
     }

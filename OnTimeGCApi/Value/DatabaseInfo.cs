@@ -7,5 +7,10 @@ namespace OnTimeGCApi
         public string Filepath { get; set; }
         public string ReplicaID { get; set; }
         public int Size { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("{{ Server: \"{0}\" | Filepath: \"{1}\" | Size: \"{2}\" }}", this.Server, this.Filepath, this.Size);
+        }
     }
 }

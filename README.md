@@ -4,7 +4,7 @@ Tested with API Version 3, 4 and 5
 
 #### Currently implemented methods  
 ##### Core:
-* [ ] Calendars
+* [X] Calendars
 * [X] Login
 * [X] Logout
 * [X] UsersAll
@@ -12,11 +12,11 @@ Tested with API Version 3, 4 and 5
 * [X] Version
 
 ##### Extended:
-* [ ] AppointmentChange
-* [ ] AppointmentCreate
+* [X] AppointmentChange
+* [X] AppointmentCreate
 * [ ] AppointmentInviteeStatus
 * [ ] AppointmentRead
-* [ ] AppointmentRemove
+* [X] AppointmentRemove
 * [ ] AppointmentRepeatDates
 * [ ] CustomFieldsList
 * [ ] FreeResources

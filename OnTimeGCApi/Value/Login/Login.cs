@@ -1,5 +1,5 @@
 ﻿
-namespace OnTimeGCApi.Login
+namespace OnTimeGCApi
 {
     public class Login
     {

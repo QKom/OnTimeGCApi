@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 
-namespace OnTimeGCApi.Calendars
+namespace OnTimeGCApi
 {
     public class Id
     {
         public string ID { get; set; }
-        public List<Item> Items { get; set; }
+        public List<CalendarItem> Items { get; set; }
 
         public override string ToString()
         {

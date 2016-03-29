@@ -17,7 +17,6 @@ namespace OnTimeGCApi
         public string MailSource { get; set; }
         public string MailServer { get; set; }
         public string MailFilepath { get; set; }
-        // TODO: CustomFields List<string> -> ?
         public List<string> CustomFields { get; set; }
         public List<DateTime> WorkTimes { get; set; }
         public string Firstname { get; set; }
@@ -37,7 +36,7 @@ namespace OnTimeGCApi
 
         public override string ToString()
         {
-            return string.Format("{{ Id: \"{0}\" | Name: \"{1}\" | Email: \"{2}\" | Type: \"{3}\" }}", this.ID, this.DispName, this.Email, this.Type);
+            return string.Format("{{ Id: \"{0}\" | Name: \"{1}\" | Email: \"{2}\" | Type: \"{3}\" }}", this.ID, this.Name, this.Email, this.Type);
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace OnTimeGCApi.UsersAll
+namespace OnTimeGCApi
 {
     public class UsersAll
     {

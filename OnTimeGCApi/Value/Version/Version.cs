@@ -1,5 +1,5 @@
 ﻿
-namespace OnTimeGCApi.Version
+namespace OnTimeGCApi
 {
     public class Version
     {

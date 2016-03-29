@@ -4,6 +4,7 @@ namespace OnTimeGCApi
     public class BaseResult
     {
         public string APIVersion { get; set; }
+        public string Disclaimer { get; set; }
         public string Status { get; set; }
         public string Token { get; set; }
         public bool IsAnonymous { get; set; }

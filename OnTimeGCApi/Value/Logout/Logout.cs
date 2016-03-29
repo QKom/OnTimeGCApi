@@ -1,5 +1,5 @@
 ﻿
-namespace OnTimeGCApi.Logout
+namespace OnTimeGCApi
 {
     public class Logout
     {

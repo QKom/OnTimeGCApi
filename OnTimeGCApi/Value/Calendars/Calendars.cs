@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace OnTimeGCApi.Calendars
+namespace OnTimeGCApi
 {
     public class Calendars
     {
