@@ -12,13 +12,20 @@ namespace UnitTest
         private const string ApplicationVersion = "5";
         private const int ApiVersion = 5;
         private const string Domain = "https://demo.ontimesuite.com";
-        private const string ApiPath = "/ontime/ontimegcclient.nsf/";
+        private const string ApiPath = "/ontime/ontimegcclient.nsf";
+        private const string ServletPath = "/servlet/ontimegc";
+
+        private const string UserId = "U";
+        private const string Username = "Chris Holmes/OnTime";
+        private const string EmailAddress = "chris.holmes@ontime.com";
+        private const string LoginUser = "ch";
+        private const string LoginPass = "demo";
 
         [TestMethod]
         public void LoginWithValidCredentials()
         {
             Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
-            LoginResult result = client.Login("ch", "demo");
+            LoginResult result = client.Login(LoginUser, LoginPass);
 
             Assert.AreEqual(true, result.IsAuthorized, "successful");
         }
@@ -29,7 +36,7 @@ namespace UnitTest
             Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
             try
             {
-                client.Login("ch", "demo1");
+                client.Login(LoginUser, "demo1");
             }
             catch (Exception ex)
             {
@@ -44,11 +51,11 @@ namespace UnitTest
         public void Version()
         {
             Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
-            LoginResult result = client.Login("ch", "demo");
+            LoginResult result = client.Login(LoginUser, LoginPass);
             if (result.IsAuthorized)
             {
                 VersionResult versionResult = client.Version();
-                Assert.AreEqual("Chris Holmes/OnTime", versionResult.Version.UserName);
+                Assert.AreEqual(Username, versionResult.Version.UserName);
 
                 return;
             }
@@ -60,7 +67,7 @@ namespace UnitTest
         public void UsersAll()
         {
             Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
-            LoginResult result = client.Login("ch", "demo");
+            LoginResult result = client.Login(LoginUser, LoginPass);
             if (result.IsAuthorized)
             {
                 UsersAllResult usersAllResult = client.UsersAll();
@@ -76,12 +83,12 @@ namespace UnitTest
         public void UsersInfo()
         {
             Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
-            LoginResult result = client.Login("ch", "demo");
+            LoginResult result = client.Login(LoginUser, LoginPass);
             if (result.IsAuthorized)
             {
-                UsersInfoResult usersInfoResult = client.UsersInfo(onTimeIds: new List<string>() { "U" });
+                UsersInfoResult usersInfoResult = client.UsersInfo(onTimeIds: new List<string>() { UserId });
                 Assert.AreEqual(1, usersInfoResult.UsersInfo.IDs.Count);
-                Assert.AreEqual("chris.holmes@ontime.com", usersInfoResult.UsersInfo.IDs[0].Email);
+                Assert.AreEqual(EmailAddress, usersInfoResult.UsersInfo.IDs[0].Email);
 
                 return;
             }
@@ -93,10 +100,10 @@ namespace UnitTest
         public void Calendars()
         {
             Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
-            LoginResult result = client.Login("ch", "demo");
+            LoginResult result = client.Login(LoginUser, LoginPass);
             if (result.IsAuthorized)
             {
-                CalendarsResult calendarsResult = client.Calendars(DateTime.Now.AddMonths(-1), DateTime.Now.AddMonths(1), onTimeIds: new List<string>() { "U", "10" });
+                CalendarsResult calendarsResult = client.Calendars(DateTime.Now.AddMonths(-1), DateTime.Now.AddMonths(1), onTimeIds: new List<string>() { UserId, "10" });
                 Assert.AreEqual(2, calendarsResult.Calendars.IDs.Count);
 
                 return;
@@ -109,11 +116,11 @@ namespace UnitTest
         public void Logout()
         {
             Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
-            LoginResult result = client.Login("ch", "demo");
+            LoginResult result = client.Login(LoginUser, LoginPass);
             if (result.IsAuthorized)
             {
                 LogoutResult logoutResult = client.Logout();
-                Assert.AreEqual("Chris Holmes/OnTime", logoutResult.Logout.Name);
+                Assert.AreEqual(Username, logoutResult.Logout.Name);
                 return;
             }
 
@@ -124,17 +131,17 @@ namespace UnitTest
         public void AppointmentCreateChangeDelete()
         {
             Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
-            LoginResult result = client.Login("ch", "demo");
+            LoginResult result = client.Login(LoginUser, LoginPass);
             if (result.IsAuthorized)
             {
                 DateTime baseValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1, 12, 0, 0, DateTimeKind.Utc);
-                AppointmentCreateResult appointmentCreateResult = client.AppointmentCreate(EventType.Appointment, "U", baseValue, baseValue.AddMinutes(30), "TestSubject1");
+                AppointmentCreateResult appointmentCreateResult = client.AppointmentCreate(EventType.Appointment, UserId, baseValue, baseValue.AddMinutes(30), "TestSubject1");
                 Assert.AreEqual("OK", appointmentCreateResult.AppointmentCreate.Status);
 
-                AppointmentChangeResult appointmentChangeResult = client.AppointmentChange("U", appointmentCreateResult.AppointmentCreate.NewUnID, baseValue, baseValue.AddHours(1), subject: "TestSubject2");
+                AppointmentChangeResult appointmentChangeResult = client.AppointmentChange(UserId, appointmentCreateResult.AppointmentCreate.NewUnID, baseValue, baseValue.AddHours(1), subject: "TestSubject2");
                 Assert.AreEqual("OK", appointmentChangeResult.AppointmentChange.Status);
 
-                AppointmentRemoveResult appointmentRemoveResult = client.AppointmentRemove("U", appointmentCreateResult.AppointmentCreate.NewUnID);
+                AppointmentRemoveResult appointmentRemoveResult = client.AppointmentRemove(UserId, appointmentCreateResult.AppointmentCreate.NewUnID);
                 Assert.AreEqual("OK", appointmentRemoveResult.AppointmentRemove.Status);
 
                 return;
@@ -143,5 +150,45 @@ namespace UnitTest
             Assert.Fail("Login failed.");
         }
 
+        [TestMethod]
+        public void MailContactsListResult()
+        {
+            Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath, ServletPath);
+            LoginResult result = client.Login(LoginUser, LoginPass);
+            if (result.IsAuthorized)
+            {
+                MailContactsListResult mailContactsListResult = client.MailContactsList(UserId);
+                Assert.AreNotEqual(null, mailContactsListResult.MailContactsList.Contacts);
+
+                return;
+            }
+
+            Assert.Fail("Login failed.");
+        }
+
+        [TestMethod]
+        public void MailContactCreateChangeReadDelete()
+        {
+            Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath, ServletPath);
+            LoginResult result = client.Login(LoginUser, LoginPass);
+            if (result.IsAuthorized)
+            {
+                MailContactsCreateResult mailContactsCreateResult = client.MailContactCreate(UserId, "Herr Hans Test", "hans.test@foo.de", title: "Herr", additionalFields: new Dictionary<string, string>() { { "Foo", "Bar" } });
+                Assert.AreEqual("OK", mailContactsCreateResult.Status);
+
+                MailContactsChangeResult mailContactsChangeResult = client.MailContactsChange(UserId, mailContactsCreateResult.MailContactsCreate.Contact.UnID, additionalFields: new Dictionary<string, string>() { { "Foo", "FooBar" } });
+                Assert.AreEqual("OK", mailContactsChangeResult.Status);
+
+                MailContactsReadResult mailContactsReadResult = client.MailContactsRead(UserId, mailContactsCreateResult.MailContactsCreate.Contact.UnID, new List<string>() { "Foo" });
+                Assert.AreEqual("hans.test@foo.de", mailContactsReadResult.MailContactsRead.Contact.Email);
+
+                MailContactsRemoveResult mailContactsRemoveResult = client.MailContactsRemove(UserId, mailContactsCreateResult.MailContactsCreate.Contact.UnID);
+                Assert.AreEqual("OK", mailContactsRemoveResult.Status);
+
+                return;
+            }
+
+            Assert.Fail("Login failed.");
+        }
     }
 }

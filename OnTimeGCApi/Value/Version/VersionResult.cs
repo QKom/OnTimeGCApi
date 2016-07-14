@@ -3,6 +3,6 @@ namespace OnTimeGCApi
 {
     public class VersionResult : BaseResult
     {
-        public Version Version { get; set; }
+        public VersionItem Version { get; set; }
     }
 }

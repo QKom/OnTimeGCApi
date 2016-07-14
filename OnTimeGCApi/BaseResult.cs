@@ -3,7 +3,6 @@ namespace OnTimeGCApi
 {
     public class BaseResult
     {
-        public string APIVersion { get; set; }
         public string Disclaimer { get; set; }
         public string Status { get; set; }
         public string Token { get; set; }
@@ -13,7 +12,7 @@ namespace OnTimeGCApi
 
         public override string ToString()
         {
-            return string.Format("{{ Status: {0} | ApiVersion: {1} | IsAnonymous: {2} | ErrorCode: {3} }}", this.Status, this.APIVersion, this.IsAnonymous, this.ErrorCode.ToNullString());
+            return string.Format("{{ Status: {0} | IsAnonymous: {1} | ErrorCode: {2} }}", this.Status, this.IsAnonymous, this.ErrorCode.ToNullString());
         }
     }
 }

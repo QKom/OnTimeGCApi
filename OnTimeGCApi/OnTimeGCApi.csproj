@@ -55,6 +55,17 @@
     <Compile Include="Value\Login\Login.cs" />
     <Compile Include="Value\Logout\LogoutResult.cs" />
     <Compile Include="Value\Logout\Logout.cs" />
+    <Compile Include="Value\MailContactsChange\MailContactsChange.cs" />
+    <Compile Include="Value\MailContactsChange\MailContactsChangeResult.cs" />
+    <Compile Include="Value\MailContactsCreate\MailContactsCreate.cs" />
+    <Compile Include="Value\MailContactsCreate\MailContactsCreateResult.cs" />
+    <Compile Include="Value\Contact.cs" />
+    <Compile Include="Value\MailContactsList\ContactsItem.cs" />
+    <Compile Include="Value\MailContactsList\MailContactsListResult.cs" />
+    <Compile Include="Value\MailContactsRead\MailContactsRead.cs" />
+    <Compile Include="Value\MailContactsRead\MailContactsReadResult.cs" />
+    <Compile Include="Value\MailContactsRemove\MailContactsRemove.cs" />
+    <Compile Include="Value\MailContactsRemove\MailContactsRemoveResult.cs" />
     <Compile Include="Value\Profile.cs" />
     <Compile Include="Value\UsersAll\UsersAllResult.cs" />
     <Compile Include="Value\User.cs" />
@@ -65,10 +76,7 @@
     <Compile Include="Value\Version\VersionResult.cs" />
     <Compile Include="Utilities.cs" />
     <Compile Include="Value\Version\Server.cs" />
-    <Compile Include="Value\Version\Version.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
+    <Compile Include="Value\Version\VersionItem.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

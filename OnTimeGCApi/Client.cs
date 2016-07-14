@@ -1,7 +1,7 @@
 ﻿/*
     Name: OnTimeGCApi
     Description: OnTime Groupcalendar API
-    Version: 1.0  
+    Version: 1.1  
     Author: Oliver Haucke  
     Author URI: http://www.qkom.de/  
     E-Mail: ohaucke@qkom.de  
@@ -14,17 +14,20 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Web;
 
 namespace OnTimeGCApi
 {
     public class Client
     {
+        private const string DATETIME_FORMATTER = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
+        //private const string DATETIME_FORMATTER = "o";
         private OtBase main;
         private string domain;
         private string apiPath;
+        private string servletPath;
         private Uri apiEndpoint;
+        private Uri servletEndpoint;
 
         /// <summary>
         /// 
@@ -34,12 +37,18 @@ namespace OnTimeGCApi
         /// <param name="apiVersion">The version of the API you are using</param>
         /// <param name="domain"></param>
         /// <param name="apiPath"></param>
-        public Client(string applicationId, string applicationVersion, int apiVersion, string domain, string apiPath)
+        /// <param name="servletPath"></param>
+        public Client(string applicationId, string applicationVersion, int apiVersion, string domain, string apiPath, string servletPath = null)
         {
             this.main = new OtBase(applicationId, applicationVersion, apiVersion);
             this.domain = domain;
             this.apiPath = apiPath;
+            this.servletPath = servletPath;
             this.apiEndpoint = new Uri(string.Format("{0}{1}/apihttp", this.domain, this.apiPath));
+            if (this.servletPath != null)
+            {
+                this.servletEndpoint = new Uri(string.Format("{0}{1}", this.domain, this.servletPath));
+            }
         }
 
         /// <summary>
@@ -199,8 +208,8 @@ namespace OnTimeGCApi
             if (end == null) { throw new ArgumentNullException("end"); }
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("FromDT", start.ToUniversalTime().ToString("o"));
-            parameters.Add("ToDT", end.ToUniversalTime().ToString("o"));
+            parameters.Add("FromDT", start.ToUniversalTime().ToString(DATETIME_FORMATTER));
+            parameters.Add("ToDT", end.ToUniversalTime().ToString(DATETIME_FORMATTER));
             parameters.Add("TimeOffOnly", timeOffOnly);
 
             if (onTimeIds != null && onTimeIds.Count != 0) { parameters.Add("IDs", onTimeIds); }
@@ -256,8 +265,8 @@ namespace OnTimeGCApi
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("AppType", type);
             parameters.Add("UserID", userId);
-            parameters.Add("StartDT", start.ToUniversalTime().ToString("o"));
-            parameters.Add("EndDT", end.ToUniversalTime().ToString("o"));
+            parameters.Add("StartDT", start.ToUniversalTime().ToString(DATETIME_FORMATTER));
+            parameters.Add("EndDT", end.ToUniversalTime().ToString(DATETIME_FORMATTER));
             parameters.Add("Subject", subject);
 
             if (location != null) { parameters.Add("Location", location); }
@@ -314,8 +323,8 @@ namespace OnTimeGCApi
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("UserID", userId);
             parameters.Add("UnID", unId);
-            parameters.Add("NewStartDT", start.ToUniversalTime().ToString("o"));
-            parameters.Add("NewEndDT", end.ToUniversalTime().ToString("o"));
+            parameters.Add("NewStartDT", start.ToUniversalTime().ToString(DATETIME_FORMATTER));
+            parameters.Add("NewEndDT", end.ToUniversalTime().ToString(DATETIME_FORMATTER));
             parameters.Add("NewPrivate", isPrivate);
             parameters.Add("NewAvailable", isAvailable);
 
@@ -369,6 +378,172 @@ namespace OnTimeGCApi
             string response = Utilities.Post(this.apiEndpoint, payload);
 
             AppointmentRemoveResult result = response.ParseJson<AppointmentRemoveResult>();
+            this.main.UpdateToken(result.Token);
+
+            return result;
+        }
+
+        public MailContactsListResult MailContactsList(string userId, List<string> additionalFields = null)
+        {
+            if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
+            if (this.main.APIVer < 5) { throw new Exception("This function is not supported with api version lower than 5."); }
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("UserID", userId);
+
+            if (additionalFields != null) { parameters.Add("Fields", additionalFields); }
+
+            string payload = (new { Main = this.main, MailContactsList = parameters }).ToJson();
+            string response = Utilities.Post(this.servletEndpoint, payload);
+
+            MailContactsListResult result = response.ParseJson<MailContactsListResult>();
+            this.main.UpdateToken(result.Token);
+
+            if (additionalFields != null)
+            {
+                Dictionary<string, object> temp = response.ParseJson<Dictionary<string, object>>();
+                temp = (Dictionary<string, object>)temp["MailContactsList"];
+                foreach (Dictionary<string, object> contact in (System.Collections.ArrayList)temp["Contacts"])
+                {
+                    string unId = contact["UnID"].ToString();
+                    Contact c = result.MailContactsList.Contacts.Find((x) => { return (x.UnID == unId); });
+                    c.Fields = new Dictionary<string, object>();
+
+                    foreach (string item in additionalFields)
+                    {
+                        c.Fields.Add(item, contact[item]);
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public MailContactsCreateResult MailContactCreate(string userId, string fullName, string mailAddress, string title = null, string companyName = null, string department = null, string jobTitle = null, string officePhoneNumber = null, string cellPhoneNumber = null, List<string> categories = null, Dictionary<string, string> additionalFields = null)
+        {
+            if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
+            if (this.main.APIVer < 5) { throw new Exception("This function is not supported with api version lower than 5."); }
+            if (userId == null) { throw new ArgumentNullException("userId"); }
+            if (fullName == null) { throw new ArgumentNullException("fullName"); }
+            if (mailAddress == null) { throw new ArgumentNullException("mailAddress"); }
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("UserID", userId);
+            parameters.Add("FullName", fullName);
+            parameters.Add("MailAddress", mailAddress);
+
+            if (title != null) { parameters.Add("Title", title); }
+            if (companyName != null) { parameters.Add("CompanyName", companyName); }
+            if (department != null) { parameters.Add("Department", department); }
+            if (jobTitle != null) { parameters.Add("JobTitle", jobTitle); }
+            if (officePhoneNumber != null) { parameters.Add("OfficePhoneNumber", officePhoneNumber); }
+            if (cellPhoneNumber != null) { parameters.Add("CellPhoneNumber", cellPhoneNumber); }
+            if (categories != null && categories.Count != 0) { parameters.Add("Categories", categories); }
+
+            if (additionalFields != null)
+            {
+                foreach (KeyValuePair<string, string> item in additionalFields)
+                {
+                    parameters.Add(item.Key, item.Value);
+                }
+            }
+
+            string payload = (new { Main = this.main, MailContactsCreate = parameters }).ToJson();
+            string response = Utilities.Post(this.servletEndpoint, payload);
+
+            MailContactsCreateResult result = response.ParseJson<MailContactsCreateResult>();
+            this.main.UpdateToken(result.Token);
+
+            return result;
+        }
+
+        public MailContactsReadResult MailContactsRead(string userId, string unId, List<string> additionalFields = null)
+        {
+            if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
+            if (this.main.APIVer < 5) { throw new Exception("This function is not supported with api version lower than 5."); }
+            if (userId == null) { throw new ArgumentNullException("userId"); }
+            if (unId == null) { throw new ArgumentNullException("unId"); }
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("UserID", userId);
+            parameters.Add("UnID", unId);
+
+            if (additionalFields != null) { parameters.Add("Fields", additionalFields); }
+
+            string payload = (new { Main = this.main, MailContactsRead = parameters }).ToJson();
+            string response = Utilities.Post(this.servletEndpoint, payload);
+
+            MailContactsReadResult result = response.ParseJson<MailContactsReadResult>();
+            this.main.UpdateToken(result.Token);
+
+            if (additionalFields != null)
+            {
+                Dictionary<string, object> temp = response.ParseJson<Dictionary<string, object>>();
+                temp = (Dictionary<string, object>)temp["MailContactsRead"];
+                temp = (Dictionary<string, object>)temp["Contact"];
+                result.MailContactsRead.Contact.Fields = new Dictionary<string, object>();
+                foreach (string item in additionalFields)
+                {
+                    result.MailContactsRead.Contact.Fields.Add(item, temp[item]);
+                }
+            }
+
+            return result;
+        }
+
+        public MailContactsChangeResult MailContactsChange(string userId, string unId, string fullName = null, string mailAddress = null, string title = null, string companyName = null, string department = null, string jobTitle = null, string officePhoneNumber = null, string cellPhoneNumber = null, List<string> categories = null, Dictionary<string, string> additionalFields = null)
+        {
+            if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
+            if (this.main.APIVer < 5) { throw new Exception("This function is not supported with api version lower than 5."); }
+            if (userId == null) { throw new ArgumentNullException("userId"); }
+            if (unId == null) { throw new ArgumentNullException("unId"); }
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("UserID", userId);
+            parameters.Add("UnID", unId);
+
+            if (fullName != null) { parameters.Add("FullName", fullName); }
+            if (mailAddress != null) { parameters.Add("MailAddress", mailAddress); }
+            if (title != null) { parameters.Add("Title", title); }
+            if (companyName != null) { parameters.Add("CompanyName", companyName); }
+            if (department != null) { parameters.Add("Department", department); }
+            if (jobTitle != null) { parameters.Add("JobTitle", jobTitle); }
+            if (officePhoneNumber != null) { parameters.Add("OfficePhoneNumber", officePhoneNumber); }
+            if (cellPhoneNumber != null) { parameters.Add("CellPhoneNumber", cellPhoneNumber); }
+            if (categories != null && categories.Count != 0) { parameters.Add("Categories", categories); }
+
+            if (additionalFields != null)
+            {
+                foreach (KeyValuePair<string, string> item in additionalFields)
+                {
+                    parameters.Add(item.Key, item.Value);
+                }
+            }
+
+            string payload = (new { Main = this.main, MailContactsChange = parameters }).ToJson();
+            string response = Utilities.Post(this.servletEndpoint, payload);
+
+            MailContactsChangeResult result = response.ParseJson<MailContactsChangeResult>();
+            this.main.UpdateToken(result.Token);
+
+            return result;
+        }
+
+        public MailContactsRemoveResult MailContactsRemove(string userId, string unId)
+        {
+            if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
+            if (this.main.APIVer < 5) { throw new Exception("This function is not supported with api version lower than 5."); }
+            if (userId == null) { throw new ArgumentNullException("userId"); }
+            if (unId == null) { throw new ArgumentNullException("unId"); }
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("UserID", userId);
+            parameters.Add("UnID", unId);
+
+            string payload = (new { Main = this.main, MailContactsRemove = parameters }).ToJson();
+            string response = Utilities.Post(this.servletEndpoint, payload);
+
+            MailContactsRemoveResult result = response.ParseJson<MailContactsRemoveResult>();
             this.main.UpdateToken(result.Token);
 
             return result;

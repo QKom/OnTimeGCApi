@@ -49,13 +49,21 @@ Tested with API Version 3, 4 and 5
 * [ ] UsersPhoto
 * [ ] UsersSearch
 
-## Requirements
-* [.Net Framework 4.0](http://www.microsoft.com/de-de/download/details.aspx?id=17718)
+##### Beta:
+* [X] MailContactsList
+* [X] MailContactsCreate
+* [X] MailContactsRead
+* [X] MailContactsChange
+* [X] MailContactsRemove
+* [ ] UsersStatus
+* [ ] MailList
+* [ ] MailRead
+* [ ] MailChange
 
 ## General
 Name: OnTimeGCApi  
 Description: OnTime Groupcalendar API  
-Version: 1.0  
+Version: 1.1  
 Author: Oliver Haucke  
 Author URI: http://www.qkom.de/  
 E-Mail: ohaucke@qkom.de  

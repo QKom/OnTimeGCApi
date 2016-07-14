@@ -9,38 +9,38 @@ using System.Web.Script.Serialization;
 
 namespace OnTimeGCApi
 {
-    public static class Utilities
+    internal static class Utilities
     {
-        public static string ToJson<T>(this T source)
+        internal static string ToJson<T>(this T source)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
 
             return serializer.Serialize(source);
         }
 
-        public static T ParseJson<T>(this string source)
+        internal static T ParseJson<T>(this string source)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
 
             return serializer.Deserialize<T>(source);
         }
 
-        public static string ToNullString<T>(this T source)
+        internal static string ToNullString<T>(this T source)
         {
             return (source == null ? "NULL" : source.ToString());
         }
 
         private static bool AcceptAllCertifications(object sender, X509Certificate certification, X509Chain chain, SslPolicyErrors sslPolicyErrors) { return true; }
 
-        public static string Post(Uri endPoint, string postData, string referer = "")
+        internal static string Post(Uri endPoint, string postData, string referer = "")
         {
             CookieContainer temp = new CookieContainer();
             return Post(endPoint, postData, ref temp, referer);
         }
 
-        public static string Post(Uri endPoint, string postData, ref CookieContainer cc, string referer = "")
+        internal static string Post(Uri endPoint, string postData, ref CookieContainer cc, string referer = "")
         {
-            byte[] data = System.Text.Encoding.UTF8.GetBytes(postData);
+            byte[] data = Encoding.UTF8.GetBytes(postData);
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(endPoint);
             ServicePointManager.ServerCertificateValidationCallback = new RemoteCertificateValidationCallback(AcceptAllCertifications);

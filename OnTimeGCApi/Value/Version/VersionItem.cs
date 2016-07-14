@@ -1,9 +1,10 @@
 ﻿
 namespace OnTimeGCApi
 {
-    public class Version
+    public class VersionItem
     {
-        public string APIVersion { get; set; }
+        public string Version { get; set; }
+        public string BuildTime { get; set; }
         public string UserName { get; set; }
         public Server Server { get; set; }
         public DatabaseInfo ConfigDatabase { get; set; }
