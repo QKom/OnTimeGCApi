@@ -68,7 +68,7 @@ namespace OnTimeGCApi
             Uri uri = new System.Uri(string.Format("{0}/names.nsf?Login", this.domain));
 
             string response = Utilities.Post(uri, payload, ref cc);
-            if (!response.Contains("Domino Directory"))
+            if (!(response.Contains("Domino Directory") || response.Contains("Special database object cannot be located")))
             {
                 throw new Exception("Invalid credentials.");
             }
@@ -89,6 +89,25 @@ namespace OnTimeGCApi
             // login
             payload = (new { Main = this.main, Login = (new { }) }).ToJson();
             response = Utilities.Post(this.apiEndpoint, payload, ref cc);
+
+            LoginResult result = response.ParseJson<LoginResult>();
+            if (result.Status != "OK")
+            {
+                throw new Exception(string.Format("Login failed | [{0}] {1}", result.ErrorCode, result.Error));
+            }
+
+            this.main.UpdateToken(result.Token);
+
+            return result;
+        }
+
+        public LoginResult Login(string token)
+        {
+            this.main.Token = token;
+
+            // login
+            string payload = (new { Main = this.main, Login = (new { }) }).ToJson();
+            string response = Utilities.Post(this.apiEndpoint, payload);
 
             LoginResult result = response.ParseJson<LoginResult>();
             if (result.Status != "OK")
@@ -220,7 +239,7 @@ namespace OnTimeGCApi
             string response = Utilities.Post(this.apiEndpoint, payload);
 
             // workaround for AppointmentType "Invatation" to be compatible with enumerations
-            response = response.Replace("\"ApptType\":\"I\"", "\"ApptType\":\"4\"");
+            response = response.Replace("\"ApptType\":\"I\"", "\"ApptType\":\"4\"").Replace("\"ApptType\":\"C\"", "\"ApptType\":\"5\"").Replace("\"ApptType\":\"U\"", "\"ApptType\":\"6\"");
 
             CalendarsResult result = response.ParseJson<CalendarsResult>();
             this.main.UpdateToken(result.Token);
@@ -378,6 +397,52 @@ namespace OnTimeGCApi
             string response = Utilities.Post(this.apiEndpoint, payload);
 
             AppointmentRemoveResult result = response.ParseJson<AppointmentRemoveResult>();
+            this.main.UpdateToken(result.Token);
+
+            return result;
+        }
+
+        /// <summary>
+        /// List groups
+        /// </summary>
+        /// <param name="includePublic">If true result is filted to include public groups</param>
+        /// <param name="includePrivate">If true result is filted to include private groups</param>
+        /// <param name="includeShared">If true result is filted to include shared groups</param>
+        /// <returns></returns>
+        public GroupListResult GroupList(bool? includePublic, bool? includePrivate, bool? includeShared)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("OnlyLevel", "");
+
+            if (includePublic != null) { parameters.Add("InclPublic", includePublic); }
+            if (includePrivate != null) { parameters.Add("InclPrivate", includePrivate); }
+            if (includeShared != null) { parameters.Add("InclShared", includeShared); }
+
+            string payload = (new { Main = this.main, GroupList = parameters }).ToJson();
+            string response = Utilities.Post(this.apiEndpoint, payload);
+
+            GroupListResult result = response.ParseJson<GroupListResult>();
+            this.main.UpdateToken(result.Token);
+
+            return result;
+        }
+
+        /// <summary>
+        /// List of User IDs for given a single group ID
+        /// </summary>
+        /// <param name="groupId">Group ID for which to return user IDs</param>
+        /// <returns></returns>
+        public GroupUserIdsResult GroupUserIds(string groupId)
+        {
+            if (groupId == null) { throw new ArgumentNullException("groupId"); }
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("GroupID", groupId);
+
+            string payload = (new { Main = this.main, GroupUserIDs = parameters }).ToJson();
+            string response = Utilities.Post(this.apiEndpoint, payload);
+
+            GroupUserIdsResult result = response.ParseJson<GroupUserIdsResult>();
             this.main.UpdateToken(result.Token);
 
             return result;

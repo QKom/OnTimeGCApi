@@ -63,12 +63,25 @@ namespace OnTimeGCApi
                 requestStream.Write(data, 0, data.Length);
             }
 
-            using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            using (Stream responseStream = (response.ContentEncoding.ToLower().Contains("gzip") ? new GZipStream(response.GetResponseStream(), CompressionMode.Decompress) : response.GetResponseStream()))
-
-            using (StreamReader buffer = new StreamReader(responseStream, Encoding.UTF8))
+            try
             {
-                return buffer.ReadToEnd();
+                using (HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+                using (Stream responseStream = (response.ContentEncoding.ToLower().Contains("gzip") ? new GZipStream(response.GetResponseStream(), CompressionMode.Decompress) : response.GetResponseStream()))
+
+                using (StreamReader buffer = new StreamReader(responseStream, Encoding.UTF8))
+                {
+                    return buffer.ReadToEnd();
+                }
+            }
+            catch (WebException ex)
+            {
+                using (HttpWebResponse response = (HttpWebResponse)ex.Response)
+                using (Stream responseStream = (response.ContentEncoding.ToLower().Contains("gzip") ? new GZipStream(response.GetResponseStream(), CompressionMode.Decompress) : response.GetResponseStream()))
+
+                using (StreamReader buffer = new StreamReader(responseStream, Encoding.UTF8))
+                {
+                    return buffer.ReadToEnd();
+                }
             }
         }
     }

@@ -50,6 +50,11 @@
     <Compile Include="Value\Calendars\CalendarItem.cs" />
     <Compile Include="Value\DatabaseInfo.cs" />
     <Compile Include="Value\EventType.cs" />
+    <Compile Include="Value\GroupList\GroupList.cs" />
+    <Compile Include="Value\GroupList\GroupListItem.cs" />
+    <Compile Include="Value\GroupList\GroupListResult.cs" />
+    <Compile Include="Value\GroupUserIds\GroupUserIdsItem.cs" />
+    <Compile Include="Value\GroupUserIds\GroupUserIdsResult.cs" />
     <Compile Include="Value\Login\LoginResult.cs" />
     <Compile Include="Value\Login\Global.cs" />
     <Compile Include="Value\Login\Login.cs" />

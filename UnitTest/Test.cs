@@ -10,11 +10,11 @@ namespace UnitTest
     {
         private const string ApplicationId = "ApiExplorer";
         private const string ApplicationVersion = "5";
-        private const int ApiVersion = 5;
+        private const int ApiVersion = 7;
         private const string Domain = "https://demo.ontimesuite.com";
         private const string ApiPath = "/ontime/ontimegcclient.nsf";
         private const string ServletPath = "/servlet/ontimegc";
-
+        
         private const string UserId = "U";
         private const string Username = "Chris Holmes/OnTime";
         private const string EmailAddress = "chris.holmes@ontime.com";
@@ -27,7 +27,39 @@ namespace UnitTest
             Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
             LoginResult result = client.Login(LoginUser, LoginPass);
 
-            Assert.AreEqual(true, result.IsAuthorized, "successful");
+            Assert.AreEqual(true, result.IsAuthorized);
+        }
+
+        [TestMethod]
+        public void LoginTokenSuccess()
+        {
+            Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
+            LoginResult result = client.Login(LoginUser, LoginPass);
+            string token = result.Token;
+
+            client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
+            result = client.Login(token);
+
+            Assert.AreEqual(true, result.IsAuthorized);
+        }
+
+        [TestMethod]
+        public void LoginTokenFail()
+        {
+            string token = "a1GPawEEHwfFutIm0tHMWKMlVyMd5NmWi7VzlKeR3bAWJoW9VEJQzXAxJ6BIDBy4T0HdGIvFu2GrRF56xPgO3a";
+
+            Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
+            try
+            {
+                LoginResult result = client.Login(token);
+            }
+            catch (Exception ex)
+            {
+                Assert.AreEqual(true, ex.Message.StartsWith("Login failed"));
+                return;
+            }
+
+            Assert.Fail("failed");
         }
 
         [TestMethod]
@@ -40,7 +72,7 @@ namespace UnitTest
             }
             catch (Exception ex)
             {
-                StringAssert.Contains("Invalid credentials.", ex.Message);
+                Assert.AreEqual(true, ex.Message.Contains("Invalid credentials."));
                 return;
             }
 
@@ -128,13 +160,49 @@ namespace UnitTest
         }
 
         [TestMethod]
+        public void GroupList()
+        {
+            Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
+            LoginResult result = client.Login(LoginUser, LoginPass);
+            if (result.IsAuthorized)
+            {
+                GroupListResult groupListResult = client.GroupList(true, true, true);
+                Assert.AreEqual(true, groupListResult.GroupList.Items.Count > 0);
+                return;
+            }
+
+            Assert.Fail("Login failed.");
+        }
+
+        [TestMethod]
+        public void GroupUserIds()
+        {
+            Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
+            LoginResult result = client.Login(LoginUser, LoginPass);
+            if (result.IsAuthorized)
+            {
+                GroupListResult groupListResult = client.GroupList(true, true, true);
+                if (groupListResult.GroupList.Items.Count > 0)
+                {
+                    GroupUserIdsResult groupUserIdsResult = client.GroupUserIds(groupListResult.GroupList.Items[0].ID);
+
+                    Assert.AreEqual(groupListResult.GroupList.Items[0].ID, groupUserIdsResult.GroupUserIDs.ID);
+                    return;
+                }
+                Assert.Fail("Fetching GroupList");
+            }
+
+            Assert.Fail("Login failed.");
+        }
+
+        [TestMethod]
         public void AppointmentCreateChangeDelete()
         {
             Client client = new Client(ApplicationId, ApplicationVersion, ApiVersion, Domain, ApiPath);
             LoginResult result = client.Login(LoginUser, LoginPass);
             if (result.IsAuthorized)
             {
-                DateTime baseValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day + 1, 12, 0, 0, DateTimeKind.Utc);
+                DateTime baseValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 12, 0, 0, DateTimeKind.Utc);
                 AppointmentCreateResult appointmentCreateResult = client.AppointmentCreate(EventType.Appointment, UserId, baseValue, baseValue.AddMinutes(30), "TestSubject1");
                 Assert.AreEqual("OK", appointmentCreateResult.AppointmentCreate.Status);
 

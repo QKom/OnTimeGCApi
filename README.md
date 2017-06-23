@@ -1,11 +1,14 @@
 # OnTimeGCApi
 OnTime Groupcalendar API  
-Tested with API Version 3, 4 and 5  
+
+#### Tested against Version:
+* [X] 5.2.0 (Module Version: 11.6)
 
 #### Currently implemented methods  
 ##### Core:
 * [X] Calendars
 * [X] Login
+* [X] Login with existing Token
 * [X] Logout
 * [X] UsersAll
 * [X] UsersInfo
@@ -22,11 +25,11 @@ Tested with API Version 3, 4 and 5
 * [ ] FreeResources
 * [ ] FreeRooms
 * [ ] FreeTimeSearch
-* [ ] GroupList
+* [X] GroupList
 * [ ] GroupPrivateChange
 * [ ] GroupPrivateRemove
 * [ ] GroupUserIDs (multiple)
-* [ ] GroupUserIDs (single)
+* [X] GroupUserIDs (single)
 * [ ] LanguageList
 * [ ] LanguageText
 * [ ] Legends
@@ -63,7 +66,7 @@ Tested with API Version 3, 4 and 5
 ## General
 Name: OnTimeGCApi  
 Description: OnTime Groupcalendar API  
-Version: 1.1  
+Version: 1.2  
 Author: Oliver Haucke  
 Author URI: http://www.qkom.de/  
 E-Mail: ohaucke@qkom.de  
