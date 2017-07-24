@@ -36,7 +36,7 @@ namespace OnTimeGCApi
 
         public override string ToString()
         {
-            return string.Format("{{ Id: \"{0}\" | Name: \"{1}\" | Email: \"{2}\" | Type: \"{3}\" }}", this.ID, this.Name, this.Email, this.Type);
+            return $"{{ Id: \"{this.ID}\" | Name: \"{this.Name}\" | Email: \"{this.Email}\" | Type: \"{this.Type}\" }}";
         }
     }
 }

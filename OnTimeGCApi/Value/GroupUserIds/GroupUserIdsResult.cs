@@ -1,4 +1,5 @@
-﻿namespace OnTimeGCApi
+﻿
+namespace OnTimeGCApi
 {
     public class GroupUserIdsResult : BaseResult
     {

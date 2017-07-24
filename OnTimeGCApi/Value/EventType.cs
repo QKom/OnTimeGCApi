@@ -8,6 +8,11 @@ namespace OnTimeGCApi
         Meeting = 3,
         Invatation = 4, // = "I"
         Cancelled = 5, // "C"
-        Unknown = 6 // = "U"
+        Reschedule = 6, // = "U"
+        Confirmed = 7, // = "N"
+        InfoUpdate = 8, // = "E"
+        Removed = 9, // = "S"
+        Countered = 10, // = "T"
+        Rejected = 11, // = "R"
     }
 }

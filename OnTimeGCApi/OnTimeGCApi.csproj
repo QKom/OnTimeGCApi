@@ -44,6 +44,8 @@
     <Compile Include="Value\AppointmentCreate\AppointmentCreateResult.cs" />
     <Compile Include="Value\AppointmentRemove\AppointmentRemove.cs" />
     <Compile Include="Value\AppointmentRemove\AppointmentRemoveResult.cs" />
+    <Compile Include="Value\CalendarsModified\CalendarsModified.cs" />
+    <Compile Include="Value\CalendarsModified\CalendarsModifiedResult.cs" />
     <Compile Include="Value\Calendars\CalendarsResult.cs" />
     <Compile Include="Value\Calendars\Calendars.cs" />
     <Compile Include="Value\Calendars\Id.cs" />

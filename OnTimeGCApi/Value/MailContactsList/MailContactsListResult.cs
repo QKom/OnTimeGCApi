@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace OnTimeGCApi
+﻿namespace OnTimeGCApi
 {
     public class MailContactsListResult : BaseResult
     {

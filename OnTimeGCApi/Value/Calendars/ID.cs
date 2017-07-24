@@ -9,7 +9,7 @@ namespace OnTimeGCApi
 
         public override string ToString()
         {
-            return string.Format("{{ Id: \"{0}\" | Count: \"{1}\" }}", this.ID, this.Items.Count);
+            return $"{{ Id: \"{this.ID}\" | Count: \"{this.Items.Count}\" }}";
         }
     }
 }

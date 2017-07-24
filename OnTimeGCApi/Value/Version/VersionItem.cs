@@ -11,5 +11,10 @@ namespace OnTimeGCApi
         public DatabaseInfo ApiDatabase { get; set; }
         public DatabaseInfo ApiLog { get; set; }
         public int SectionProcessTime { get; set; }
+
+        public override string ToString()
+        {
+            return $"{{ Version: {this.Version} | ServerName: {this.Server?.Name} }}";
+        }
     }
 }

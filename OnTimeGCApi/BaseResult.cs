@@ -12,7 +12,7 @@ namespace OnTimeGCApi
 
         public override string ToString()
         {
-            return string.Format("{{ Status: {0} | IsAnonymous: {1} | ErrorCode: {2} }}", this.Status, this.IsAnonymous, this.ErrorCode.ToNullString());
+            return $"{{ Status: {this.Status} | IsAnonymous: {this.IsAnonymous} | ErrorCode: {this.ErrorCode} }}";
         }
     }
 }

@@ -16,6 +16,7 @@ namespace OnTimeGCApi
         public string From { get; set; }
         public List<string> Categories { get; set; }
         public int BodyLength { get; set; }
+        public string BodyAbb { get; set; }
         public string ApptUnID { get; set; }
         public bool Available { get; set; }
         public bool Private { get; set; }
@@ -35,7 +36,7 @@ namespace OnTimeGCApi
 
         public override string ToString()
         {
-            return string.Format("{{ Start: \"{0}\" | End: \"{1}\" | Type: \"{2}\" | UnId: \"{3}\" | Subject: \"{4}\" }}", this.StartDT, this.EndDT, this.ApptType, this.UnID, this.Subject);
+            return $"{{ Start: \"{this.StartDT}\" | End: \"{this.EndDT}\" | Type: \"{this.ApptType}\" | UnId: \"{this.UnID}\" | Subject: \"{this.Subject}\" }}";
         }
     }
 }

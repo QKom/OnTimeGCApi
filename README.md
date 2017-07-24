@@ -3,6 +3,7 @@ OnTime Groupcalendar API
 
 #### Tested against Version:
 * [X] 5.2.0 (Module Version: 11.6)
+* [X] 5.2.2-beta.1 (Module Version: 11.6)
 
 #### Currently implemented methods  
 ##### Core:
@@ -53,6 +54,7 @@ OnTime Groupcalendar API
 * [ ] UsersSearch
 
 ##### Beta:
+* [X] CalendarsModified
 * [X] MailContactsList
 * [X] MailContactsCreate
 * [X] MailContactsRead
@@ -66,7 +68,7 @@ OnTime Groupcalendar API
 ## General
 Name: OnTimeGCApi  
 Description: OnTime Groupcalendar API  
-Version: 1.2  
+Version: 1.2.1  
 Author: Oliver Haucke  
 Author URI: http://www.qkom.de/  
 E-Mail: ohaucke@qkom.de  

@@ -10,7 +10,7 @@ namespace OnTimeGCApi
 
         public override string ToString()
         {
-            return string.Format("{{ Server: \"{0}\" | Filepath: \"{1}\" | Size: \"{2}\" }}", this.Server, this.Filepath, this.Size);
+            return $"{{ Server: \"{this.Server}\" | Filepath: \"{this.Filepath}\" | Size: \"{this.Size}\" }}";
         }
     }
 }

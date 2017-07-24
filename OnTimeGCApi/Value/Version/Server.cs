@@ -11,7 +11,7 @@ namespace OnTimeGCApi
 
         public override string ToString()
         {
-            return string.Format("{{ Name: \"{0}\" | Version: \"{1}\" | Patform: \"{2}\" | Time: \"{3}\" }}", this.Name, this.Version, this.Platform, this.Time);
+            return $"{{ Name: \"{this.Name}\" | Version: \"{this.Version}\" | Patform: \"{this.Platform}\" | Time: \"{this.Time}\" }}";
         }
     }
 }

@@ -2,10 +2,9 @@
 
 namespace OnTimeGCApi
 {
-    public class GroupUserIdsItem
+    public class CalendarsModified
     {
-        public string ID { get; set; }
-        public bool IsUser { get; set; }
+        public string ChangeKey { get; set; }
         public List<string> IDs { get; set; }
         public int SectionProcessTime { get; set; }
     }

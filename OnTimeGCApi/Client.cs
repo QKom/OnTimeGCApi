@@ -1,19 +1,8 @@
-﻿/*
-    Name: OnTimeGCApi
-    Description: OnTime Groupcalendar API
-    Version: 1.1  
-    Author: Oliver Haucke  
-    Author URI: http://www.qkom.de/  
-    E-Mail: ohaucke@qkom.de  
-    License: BSD 2-Clause  
-    License URI: http://opensource.org/licenses/BSD-2-Clause
-    Github: https://github.com/QKom/OnTimeGCApi
-*/
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Web;
 
 namespace OnTimeGCApi
@@ -21,7 +10,6 @@ namespace OnTimeGCApi
     public class Client
     {
         private const string DATETIME_FORMATTER = "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'";
-        //private const string DATETIME_FORMATTER = "o";
         private OtBase main;
         private string domain;
         private string apiPath;
@@ -62,13 +50,13 @@ namespace OnTimeGCApi
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("username", username);
             param.Add("password", password);
-            param.Add("redirectto", "/names.nsf/$about");
+            param.Add("redirectto", "/names.nsf/Top?OpenPage");
             string payload = string.Join("&", param.Select(kvp => string.Format("{0}={1}", kvp.Key, HttpUtility.UrlEncode(kvp.Value))));
             CookieContainer cc = new CookieContainer();
             Uri uri = new System.Uri(string.Format("{0}/names.nsf?Login", this.domain));
 
             string response = Utilities.Post(uri, payload, ref cc);
-            if (!(response.Contains("Domino Directory") || response.Contains("Special database object cannot be located")))
+            if (!response.Contains("Domino Directory"))
             {
                 throw new Exception("Invalid credentials.");
             }
@@ -190,8 +178,6 @@ namespace OnTimeGCApi
         /// <returns></returns>
         public UsersInfoResult UsersInfo(List<string> identities = null, List<string> onTimeIds = null, List<string> emails = null, List<string> shortNames = null, List<string> distinguishedNames = null, List<string> groups = null, List<string> excludeIds = null, List<string> items = null)
         {
-            if (this.main.APIVer == 3 && identities != null) { throw new Exception("Parameter identities is not supported with api version 3"); }
-
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             if (identities != null && identities.Count != 0) { parameters.Add("Any", identities); }
             if (onTimeIds != null && onTimeIds.Count != 0) { parameters.Add("IDs", onTimeIds); }
@@ -238,8 +224,18 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, Calendars = parameters }).ToJson();
             string response = Utilities.Post(this.apiEndpoint, payload);
 
-            // workaround for AppointmentType "Invatation" to be compatible with enumerations
-            response = response.Replace("\"ApptType\":\"I\"", "\"ApptType\":\"4\"").Replace("\"ApptType\":\"C\"", "\"ApptType\":\"5\"").Replace("\"ApptType\":\"U\"", "\"ApptType\":\"6\"");
+            // workaround for AppointmentType to be compatible with enumerations
+            StringBuilder sb = new StringBuilder(response);
+            sb.Replace("\"ApptType\":\"I\"", "\"ApptType\":\"4\"");
+            sb.Replace("\"ApptType\":\"C\"", "\"ApptType\":\"5\"");
+            sb.Replace("\"ApptType\":\"U\"", "\"ApptType\":\"6\"");
+            sb.Replace("\"ApptType\":\"N\"", "\"ApptType\":\"7\"");
+            sb.Replace("\"ApptType\":\"E\"", "\"ApptType\":\"8\"");
+            sb.Replace("\"ApptType\":\"S\"", "\"ApptType\":\"9\"");
+            sb.Replace("\"ApptType\":\"T\"", "\"ApptType\":\"10\"");
+            sb.Replace("\"ApptType\":\"R\"", "\"ApptType\":\"11\"");
+
+            response = sb.ToString();
 
             CalendarsResult result = response.ParseJson<CalendarsResult>();
             this.main.UpdateToken(result.Token);
@@ -451,7 +447,6 @@ namespace OnTimeGCApi
         public MailContactsListResult MailContactsList(string userId, List<string> additionalFields = null)
         {
             if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
-            if (this.main.APIVer < 5) { throw new Exception("This function is not supported with api version lower than 5."); }
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("UserID", userId);
@@ -487,7 +482,6 @@ namespace OnTimeGCApi
         public MailContactsCreateResult MailContactCreate(string userId, string fullName, string mailAddress, string title = null, string companyName = null, string department = null, string jobTitle = null, string officePhoneNumber = null, string cellPhoneNumber = null, List<string> categories = null, Dictionary<string, string> additionalFields = null)
         {
             if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
-            if (this.main.APIVer < 5) { throw new Exception("This function is not supported with api version lower than 5."); }
             if (userId == null) { throw new ArgumentNullException("userId"); }
             if (fullName == null) { throw new ArgumentNullException("fullName"); }
             if (mailAddress == null) { throw new ArgumentNullException("mailAddress"); }
@@ -525,7 +519,6 @@ namespace OnTimeGCApi
         public MailContactsReadResult MailContactsRead(string userId, string unId, List<string> additionalFields = null)
         {
             if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
-            if (this.main.APIVer < 5) { throw new Exception("This function is not supported with api version lower than 5."); }
             if (userId == null) { throw new ArgumentNullException("userId"); }
             if (unId == null) { throw new ArgumentNullException("unId"); }
 
@@ -559,7 +552,6 @@ namespace OnTimeGCApi
         public MailContactsChangeResult MailContactsChange(string userId, string unId, string fullName = null, string mailAddress = null, string title = null, string companyName = null, string department = null, string jobTitle = null, string officePhoneNumber = null, string cellPhoneNumber = null, List<string> categories = null, Dictionary<string, string> additionalFields = null)
         {
             if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
-            if (this.main.APIVer < 5) { throw new Exception("This function is not supported with api version lower than 5."); }
             if (userId == null) { throw new ArgumentNullException("userId"); }
             if (unId == null) { throw new ArgumentNullException("unId"); }
 
@@ -597,7 +589,6 @@ namespace OnTimeGCApi
         public MailContactsRemoveResult MailContactsRemove(string userId, string unId)
         {
             if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
-            if (this.main.APIVer < 5) { throw new Exception("This function is not supported with api version lower than 5."); }
             if (userId == null) { throw new ArgumentNullException("userId"); }
             if (unId == null) { throw new ArgumentNullException("unId"); }
 
@@ -609,6 +600,22 @@ namespace OnTimeGCApi
             string response = Utilities.Post(this.servletEndpoint, payload);
 
             MailContactsRemoveResult result = response.ParseJson<MailContactsRemoveResult>();
+            this.main.UpdateToken(result.Token);
+
+            return result;
+        }
+
+        public CalendarsModifiedResult CalendarsModified(string changeKey = null)
+        {
+            if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            if (changeKey != null) { parameters.Add("ChangeKey", changeKey); }
+
+            string payload = (new { Main = this.main, CalendarsModified = parameters }).ToJson();
+            string response = Utilities.Post(this.servletEndpoint, payload);
+
+            CalendarsModifiedResult result = response.ParseJson<CalendarsModifiedResult>();
             this.main.UpdateToken(result.Token);
 
             return result;
