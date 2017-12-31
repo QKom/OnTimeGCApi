@@ -32,10 +32,10 @@ namespace OnTimeGCApi
             this.domain = domain;
             this.apiPath = apiPath;
             this.servletPath = servletPath;
-            this.apiEndpoint = new Uri(string.Format("{0}{1}/apihttp", this.domain, this.apiPath));
+            this.apiEndpoint = new Uri($"{this.domain}{this.apiPath}/apihttp");
             if (this.servletPath != null)
             {
-                this.servletEndpoint = new Uri(string.Format("{0}{1}", this.domain, this.servletPath));
+                this.servletEndpoint = new Uri($"{this.domain}{this.servletPath}");
             }
         }
 
@@ -47,29 +47,30 @@ namespace OnTimeGCApi
         /// <returns></returns>
         public LoginResult Login(string username, string password)
         {
+            CookieContainer cc = new CookieContainer();
             Dictionary<string, string> param = new Dictionary<string, string>();
             param.Add("username", username);
             param.Add("password", password);
-            param.Add("redirectto", "/names.nsf/Top?OpenPage");
-            string payload = string.Join("&", param.Select(kvp => string.Format("{0}={1}", kvp.Key, HttpUtility.UrlEncode(kvp.Value))));
-            CookieContainer cc = new CookieContainer();
-            Uri uri = new System.Uri(string.Format("{0}/names.nsf?Login", this.domain));
+            param.Add("redirectto", "/names.nsf/?openicon");
+            string payload = string.Join("&", param.Select(kvp => $"{kvp.Key}={HttpUtility.UrlEncode(kvp.Value)}"));
+            Uri uri = new Uri($"{this.domain}/names.nsf?Login");
 
             string response = Utilities.Post(uri, payload, ref cc);
-            if (!response.Contains("Domino Directory"))
+            string magicHeader = BitConverter.ToString(Encoding.UTF8.GetBytes(response).Take(4).ToArray());
+            if (magicHeader != "EF-BF-BD-50")
             {
-                throw new Exception("Invalid credentials.");
+                throw new Exception($"Invalid credentials / magicHeader doesn't match | {magicHeader} | {response}");
             }
 
             // token
-            uri = new Uri(string.Format("{0}{1}/apihttptoken", this.domain, this.apiPath));
+            uri = new Uri($"{this.domain}{this.apiPath}/apihttptoken");
             payload = (new { Main = this.main }).ToJson();
             response = Utilities.Post(uri, payload, ref cc);
 
             BaseResult baseResult = response.ParseJson<BaseResult>();
             if (baseResult.Status != "OK")
             {
-                throw new Exception(string.Format("Login failed | [{0}] {1}", baseResult.ErrorCode, baseResult.Error));
+                throw new Exception($"Login failed | [{baseResult.ErrorCode}] {baseResult.Error}");
             }
 
             this.main.Token = baseResult.Token;
@@ -81,7 +82,7 @@ namespace OnTimeGCApi
             LoginResult result = response.ParseJson<LoginResult>();
             if (result.Status != "OK")
             {
-                throw new Exception(string.Format("Login failed | [{0}] {1}", result.ErrorCode, result.Error));
+                throw new Exception($"Login failed | [{baseResult.ErrorCode}] {baseResult.Error}");
             }
 
             this.main.UpdateToken(result.Token);
@@ -100,7 +101,7 @@ namespace OnTimeGCApi
             LoginResult result = response.ParseJson<LoginResult>();
             if (result.Status != "OK")
             {
-                throw new Exception(string.Format("Login failed | [{0}] {1}", result.ErrorCode, result.Error));
+                throw new Exception($"Login failed | [{result.ErrorCode}] {result.Error}");
             }
 
             this.main.UpdateToken(result.Token);
