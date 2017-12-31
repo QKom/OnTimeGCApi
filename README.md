@@ -1,10 +1,6 @@
 # OnTimeGCApi
 OnTime Groupcalendar API  
 
-#### Tested against Version:
-* [X] 5.2.0 (Module Version: 11.6)
-* [X] 5.2.2-beta.1 (Module Version: 11.6)
-
 #### Currently implemented methods  
 ##### Core:
 * [X] Calendars
@@ -60,17 +56,6 @@ OnTime Groupcalendar API
 * [X] MailContactsRead
 * [X] MailContactsChange
 * [X] MailContactsRemove
-* [ ] UsersStatus
 * [ ] MailList
 * [ ] MailRead
 * [ ] MailChange
-
-## General
-Name: OnTimeGCApi  
-Description: OnTime Groupcalendar API  
-Version: 1.2.1  
-Author: Oliver Haucke  
-Author URI: http://www.qkom.de/  
-E-Mail: ohaucke@qkom.de  
-License: BSD 2-Clause  
-License URI: http://opensource.org/licenses/BSD-2-Clause

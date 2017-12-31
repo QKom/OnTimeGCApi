@@ -67,7 +67,7 @@ namespace OnTimeGCApi.Test
             }
             catch (Exception ex)
             {
-                Assert.AreEqual(true, ex.Message.Contains("Invalid credentials."));
+                Assert.AreEqual(true, ex.Message.Contains("Invalid credentials"));
                 return;
             }
 
