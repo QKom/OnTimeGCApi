@@ -109,6 +109,21 @@ namespace OnTimeGCApi
             return result;
         }
 
+        public GetTokenResult GenerateTokenOnBehalfOf(string emailAddress)
+        {
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("ClientTime", DateTime.Now.ToUniversalTime().ToString(DATETIME_FORMATTER));
+
+            string payload = (new { Main = this.main, GetToken = parameters }).ToJson();
+            payload = payload.Replace("{\"Main\":{", $"{{\"Main\":{{\"OnBehalfOf\":\"{emailAddress}\",");
+            string response = Utilities.Post(this.apiEndpoint, payload);
+
+            GetTokenResult result = response.ParseJson<GetTokenResult>();
+            this.main.UpdateToken(result.Token);
+
+            return result;
+        }
+
         /// <summary>
         /// Tell the API that we're logging out. Not critical, more as good behavior and for logging
         /// </summary>
@@ -535,7 +550,7 @@ namespace OnTimeGCApi
             MailContactsReadResult result = response.ParseJson<MailContactsReadResult>();
             this.main.UpdateToken(result.Token);
 
-            if (additionalFields != null)
+            if (additionalFields != null && additionalFields.Count != 0)
             {
                 Dictionary<string, object> temp = response.ParseJson<Dictionary<string, object>>();
                 temp = (Dictionary<string, object>)temp["MailContactsRead"];
@@ -543,7 +558,10 @@ namespace OnTimeGCApi
                 result.MailContactsRead.Contact.Fields = new Dictionary<string, object>();
                 foreach (string item in additionalFields)
                 {
-                    result.MailContactsRead.Contact.Fields.Add(item, temp[item]);
+                    if (temp.ContainsKey(item))
+                    {
+                        result.MailContactsRead.Contact.Fields.Add(item, temp[item]);
+                    }
                 }
             }
 
@@ -617,6 +635,110 @@ namespace OnTimeGCApi
             string response = Utilities.Post(this.servletEndpoint, payload);
 
             CalendarsModifiedResult result = response.ParseJson<CalendarsModifiedResult>();
+            this.main.UpdateToken(result.Token);
+
+            return result;
+        }
+
+        public MailListResult MailList(string userId, DateTime from, DateTime to)
+        {
+            if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
+            if (userId == null) { throw new ArgumentNullException("userId"); }
+            if (from == null) { throw new ArgumentNullException("from"); }
+            if (to == null) { throw new ArgumentNullException("to"); }
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("UserID", userId);
+            parameters.Add("FromDT", from.ToUniversalTime().ToString(DATETIME_FORMATTER));
+            parameters.Add("ToDT", to.ToUniversalTime().ToString(DATETIME_FORMATTER));
+
+            string payload = (new { Main = this.main, MailList = parameters }).ToJson();
+            string response = Utilities.Post(this.servletEndpoint, payload);
+
+            MailListResult result = response.ParseJson<MailListResult>();
+            this.main.UpdateToken(result.Token);
+
+            return result;
+        }
+
+        public MailReadResult MailRead(string userId, string unId, string[] fields, string[] extraItems = null, string[] attachments = null, bool bodyHtml = true, bool bodyMime = false)
+        {
+            if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
+            if (userId == null) { throw new ArgumentNullException("userId"); }
+            if (unId == null) { throw new ArgumentNullException("unId"); }
+            if (fields == null) { throw new ArgumentNullException("fields"); }
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("UserID", userId);
+            parameters.Add("UnID", unId);
+            parameters.Add("Fields", fields);
+            parameters.Add("BodyHtml", bodyHtml);
+            parameters.Add("BodyMime", bodyMime);
+
+            if (extraItems != null && extraItems.Length != 0) { parameters.Add("ExtraItems", extraItems); }
+            if (attachments != null && attachments.Length != 0) { parameters.Add("Attachments", attachments); }
+
+            string payload = (new { Main = this.main, MailRead = parameters }).ToJson();
+            string response = Utilities.Post(this.servletEndpoint, payload);
+
+            MailReadResult result = response.ParseJson<MailReadResult>();
+            this.main.UpdateToken(result.Token);
+
+            if (fields != null && fields.Length != 0)
+            {
+                Dictionary<string, object> temp = response.ParseJson<Dictionary<string, object>>();
+                temp = (Dictionary<string, object>)temp["MailRead"];
+                temp = (Dictionary<string, object>)temp["Mail"];
+                result.MailRead.Mail.Fields = new Dictionary<string, string>();
+                foreach (string item in fields)
+                {
+                    if (temp.ContainsKey(item))
+                    {
+                        result.MailRead.Mail.Fields.Add(item, (string)temp[item]);
+                    }
+                }
+            }
+
+            if (extraItems != null && extraItems.Length != 0)
+            {
+                Dictionary<string, object> temp = response.ParseJson<Dictionary<string, object>>();
+                temp = (Dictionary<string, object>)temp["MailRead"];
+                temp = (Dictionary<string, object>)temp["Mail"];
+                temp = (Dictionary<string, object>)temp["ExtraItems"];
+
+                result.MailRead.Mail.Extraitems = new Dictionary<string, MailReadExtraItem>();
+                foreach (string item in fields)
+                {
+                    if (temp.ContainsKey(item))
+                    {
+                        result.MailRead.Mail.Extraitems.Add(item, temp["Subject"].ToJson().ParseJson<MailReadExtraItem>());
+                    }
+                }
+            }
+
+            return result;
+        }
+
+        public MailSendResult MailSend(string[] sendTo, string subject, string body, string[] copyTo = null, string[] blindCopyTo = null,  MailSendAttachment[] attachments = null)
+        {
+            if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
+            if (sendTo == null || sendTo.Length == 0) { throw new ArgumentNullException("sendTo"); }
+            if (subject == null) { throw new ArgumentNullException("subject"); }
+            if (body == null) { throw new ArgumentNullException("body"); }
+
+            Dictionary<string, object> parameters = new Dictionary<string, object>();
+            parameters.Add("SendTo", sendTo);
+            parameters.Add("Subject", subject);
+            parameters.Add("Body", body);
+
+            if (copyTo != null && copyTo.Length != 0) { parameters.Add("CopyTo", copyTo); }
+            if (blindCopyTo != null && blindCopyTo.Length != 0) { parameters.Add("BlindCopyTo", blindCopyTo); }
+            if (attachments != null && attachments.Length != 0) { parameters.Add("Attachments", attachments); }
+
+            string payload = (new { Main = this.main, MailSend = parameters }).ToJson();
+            string response = Utilities.Post(this.servletEndpoint, payload);
+
+            MailSendResult result = response.ParseJson<MailSendResult>();
             this.main.UpdateToken(result.Token);
 
             return result;

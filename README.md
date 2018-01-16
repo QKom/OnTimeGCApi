@@ -10,6 +10,7 @@ OnTime Groupcalendar API
 * [X] UsersAll
 * [X] UsersInfo
 * [X] Version
+* [X] GetToken/OnBehalfOf
 
 ##### Extended:
 * [X] AppointmentChange
@@ -56,6 +57,6 @@ OnTime Groupcalendar API
 * [X] MailContactsRead
 * [X] MailContactsChange
 * [X] MailContactsRemove
-* [ ] MailList
-* [ ] MailRead
-* [ ] MailChange
+* [X] MailList
+* [X] MailRead
+* [X] MailSend

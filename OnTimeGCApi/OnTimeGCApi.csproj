@@ -16,7 +16,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -24,10 +24,11 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>..\bin\Release\OnTimeGCApi.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -52,6 +53,8 @@
     <Compile Include="Value\Calendars\CalendarItem.cs" />
     <Compile Include="Value\DatabaseInfo.cs" />
     <Compile Include="Value\EventType.cs" />
+    <Compile Include="Value\GetToken\GetTokenItem.cs" />
+    <Compile Include="Value\GetToken\GetTokenResult.cs" />
     <Compile Include="Value\GroupList\GroupList.cs" />
     <Compile Include="Value\GroupList\GroupListItem.cs" />
     <Compile Include="Value\GroupList\GroupListResult.cs" />
@@ -73,6 +76,20 @@
     <Compile Include="Value\MailContactsRead\MailContactsReadResult.cs" />
     <Compile Include="Value\MailContactsRemove\MailContactsRemove.cs" />
     <Compile Include="Value\MailContactsRemove\MailContactsRemoveResult.cs" />
+    <Compile Include="Value\MailList\MailList.cs" />
+    <Compile Include="Value\MailList\MailListAttachment.cs" />
+    <Compile Include="Value\MailList\MailListItem.cs" />
+    <Compile Include="Value\MailList\MailListResult.cs" />
+    <Compile Include="Value\MailRead\MailRead.cs" />
+    <Compile Include="Value\MailRead\MailReadAttachment.cs" />
+    <Compile Include="Value\MailRead\MailReadBodyMime.cs" />
+    <Compile Include="Value\MailRead\MailReadExtraItem.cs" />
+    <Compile Include="Value\MailRead\MailReadItem.cs" />
+    <Compile Include="Value\MailRead\MailReadResult.cs" />
+    <Compile Include="Value\MailSend\MailSend.cs" />
+    <Compile Include="Value\MailSend\MailSendAttachment.cs" />
+    <Compile Include="Value\MailSend\MailSendResult.cs" />
+    <Compile Include="Value\MailType.cs" />
     <Compile Include="Value\Profile.cs" />
     <Compile Include="Value\UsersAll\UsersAllResult.cs" />
     <Compile Include="Value\User.cs" />
