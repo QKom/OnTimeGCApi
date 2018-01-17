@@ -14,6 +14,7 @@ namespace OnTimeGCApi
         internal static string ToJson<T>(this T source)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
+            serializer.MaxJsonLength = int.MaxValue - 1;
 
             return serializer.Serialize(source);
         }
@@ -21,6 +22,7 @@ namespace OnTimeGCApi
         internal static T ParseJson<T>(this string source)
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
+            serializer.MaxJsonLength = int.MaxValue - 1;
 
             return serializer.Deserialize<T>(source);
         }
