@@ -118,8 +118,16 @@ namespace OnTimeGCApi
             payload = payload.Replace("{\"Main\":{", $"{{\"Main\":{{\"OnBehalfOf\":\"{emailAddress}\",");
             string response = Utilities.Post(this.apiEndpoint, payload);
 
-            GetTokenResult result = response.ParseJson<GetTokenResult>();
-            this.main.UpdateToken(result.Token);
+            GetTokenResult result = null;
+            try
+            {
+                result = response.ParseJson<GetTokenResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -133,8 +141,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, Logout = (new { }) }).ToJson();
             string response = Utilities.Post(this.apiEndpoint, payload);
 
-            LogoutResult result = response.ParseJson<LogoutResult>();
-            this.main.UpdateToken(result.Token);
+            LogoutResult result = null;
+            try
+            {
+                result = response.ParseJson<LogoutResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -148,8 +164,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, Version = (new { }) }).ToJson();
             string response = Utilities.Post(this.apiEndpoint, payload);
 
-            VersionResult result = response.ParseJson<VersionResult>();
-            this.main.UpdateToken(result.Token);
+            VersionResult result = null;
+            try
+            {
+                result = response.ParseJson<VersionResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -174,8 +198,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, UsersAll = parameters }).ToJson();
             string response = Utilities.Post(this.apiEndpoint, payload);
 
-            UsersAllResult result = response.ParseJson<UsersAllResult>();
-            this.main.UpdateToken(result.Token);
+            UsersAllResult result = null;
+            try
+            {
+                result = response.ParseJson<UsersAllResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -207,8 +239,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, UsersInfo = parameters }).ToJson();
             string response = Utilities.Post(this.apiEndpoint, payload);
 
-            UsersInfoResult result = response.ParseJson<UsersInfoResult>();
-            this.main.UpdateToken(result.Token);
+            UsersInfoResult result = null;
+            try
+            {
+                result = response.ParseJson<UsersInfoResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -253,8 +293,16 @@ namespace OnTimeGCApi
 
             response = sb.ToString();
 
-            CalendarsResult result = response.ParseJson<CalendarsResult>();
-            this.main.UpdateToken(result.Token);
+            CalendarsResult result = null;
+            try
+            {
+                result = response.ParseJson<CalendarsResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -314,8 +362,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, AppointmentCreate = parameters }).ToJson();
             string response = Utilities.Post(this.apiEndpoint, payload);
 
-            AppointmentCreateResult result = response.ParseJson<AppointmentCreateResult>();
-            this.main.UpdateToken(result.Token);
+            AppointmentCreateResult result = null;
+            try
+            {
+                result = response.ParseJson<AppointmentCreateResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -377,8 +433,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, AppointmentChange = parameters }).ToJson();
             string response = Utilities.Post(this.apiEndpoint, payload);
 
-            AppointmentChangeResult result = response.ParseJson<AppointmentChangeResult>();
-            this.main.UpdateToken(result.Token);
+            AppointmentChangeResult result = null;
+            try
+            {
+                result = response.ParseJson<AppointmentChangeResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -408,8 +472,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, AppointmentRemove = parameters }).ToJson();
             string response = Utilities.Post(this.apiEndpoint, payload);
 
-            AppointmentRemoveResult result = response.ParseJson<AppointmentRemoveResult>();
-            this.main.UpdateToken(result.Token);
+            AppointmentRemoveResult result = null;
+            try
+            {
+                result = response.ParseJson<AppointmentRemoveResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -433,8 +505,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, GroupList = parameters }).ToJson();
             string response = Utilities.Post(this.apiEndpoint, payload);
 
-            GroupListResult result = response.ParseJson<GroupListResult>();
-            this.main.UpdateToken(result.Token);
+            GroupListResult result = null;
+            try
+            {
+                result = response.ParseJson<GroupListResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -454,8 +534,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, GroupUserIDs = parameters }).ToJson();
             string response = Utilities.Post(this.apiEndpoint, payload);
 
-            GroupUserIdsResult result = response.ParseJson<GroupUserIdsResult>();
-            this.main.UpdateToken(result.Token);
+            GroupUserIdsResult result = null;
+            try
+            {
+                result = response.ParseJson<GroupUserIdsResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -472,24 +560,32 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, MailContactsList = parameters }).ToJson();
             string response = Utilities.Post(this.servletEndpoint, payload);
 
-            MailContactsListResult result = response.ParseJson<MailContactsListResult>();
-            this.main.UpdateToken(result.Token);
-
-            if (additionalFields != null)
+            MailContactsListResult result = null;
+            try
             {
-                Dictionary<string, object> temp = response.ParseJson<Dictionary<string, object>>();
-                temp = (Dictionary<string, object>)temp["MailContactsList"];
-                foreach (Dictionary<string, object> contact in (System.Collections.ArrayList)temp["Contacts"])
-                {
-                    string unId = contact["UnID"].ToString();
-                    Contact c = result.MailContactsList.Contacts.Find((x) => { return (x.UnID == unId); });
-                    c.Fields = new Dictionary<string, object>();
+                result = response.ParseJson<MailContactsListResult>();
+                this.main.UpdateToken(result.Token);
 
-                    foreach (string item in additionalFields)
+                if (additionalFields != null)
+                {
+                    Dictionary<string, object> temp = response.ParseJson<Dictionary<string, object>>();
+                    temp = (Dictionary<string, object>)temp["MailContactsList"];
+                    foreach (Dictionary<string, object> contact in (System.Collections.ArrayList)temp["Contacts"])
                     {
-                        c.Fields.Add(item, contact[item]);
+                        string unId = contact["UnID"].ToString();
+                        Contact c = result.MailContactsList.Contacts.Find((x) => { return (x.UnID == unId); });
+                        c.Fields = new Dictionary<string, object>();
+
+                        foreach (string item in additionalFields)
+                        {
+                            c.Fields.Add(item, contact[item]);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
             }
 
             return result;
@@ -526,8 +622,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, MailContactsCreate = parameters }).ToJson();
             string response = Utilities.Post(this.servletEndpoint, payload);
 
-            MailContactsCreateResult result = response.ParseJson<MailContactsCreateResult>();
-            this.main.UpdateToken(result.Token);
+            MailContactsCreateResult result = null;
+            try
+            {
+                result = response.ParseJson<MailContactsCreateResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -547,22 +651,30 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, MailContactsRead = parameters }).ToJson();
             string response = Utilities.Post(this.servletEndpoint, payload);
 
-            MailContactsReadResult result = response.ParseJson<MailContactsReadResult>();
-            this.main.UpdateToken(result.Token);
-
-            if (additionalFields != null && additionalFields.Count != 0)
+            MailContactsReadResult result = null;
+            try
             {
-                Dictionary<string, object> temp = response.ParseJson<Dictionary<string, object>>();
-                temp = (Dictionary<string, object>)temp["MailContactsRead"];
-                temp = (Dictionary<string, object>)temp["Contact"];
-                result.MailContactsRead.Contact.Fields = new Dictionary<string, object>();
-                foreach (string item in additionalFields)
+                result = response.ParseJson<MailContactsReadResult>();
+                this.main.UpdateToken(result.Token);
+
+                if (additionalFields != null && additionalFields.Count != 0)
                 {
-                    if (temp.ContainsKey(item))
+                    Dictionary<string, object> temp = response.ParseJson<Dictionary<string, object>>();
+                    temp = (Dictionary<string, object>)temp["MailContactsRead"];
+                    temp = (Dictionary<string, object>)temp["Contact"];
+                    result.MailContactsRead.Contact.Fields = new Dictionary<string, object>();
+                    foreach (string item in additionalFields)
                     {
-                        result.MailContactsRead.Contact.Fields.Add(item, temp[item]);
+                        if (temp.ContainsKey(item))
+                        {
+                            result.MailContactsRead.Contact.Fields.Add(item, temp[item]);
+                        }
                     }
                 }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
             }
 
             return result;
@@ -599,8 +711,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, MailContactsChange = parameters }).ToJson();
             string response = Utilities.Post(this.servletEndpoint, payload);
 
-            MailContactsChangeResult result = response.ParseJson<MailContactsChangeResult>();
-            this.main.UpdateToken(result.Token);
+            MailContactsChangeResult result = null;
+            try
+            {
+                result = response.ParseJson<MailContactsChangeResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -618,8 +738,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, MailContactsRemove = parameters }).ToJson();
             string response = Utilities.Post(this.servletEndpoint, payload);
 
-            MailContactsRemoveResult result = response.ParseJson<MailContactsRemoveResult>();
-            this.main.UpdateToken(result.Token);
+            MailContactsRemoveResult result = null;
+            try
+            {
+                result = response.ParseJson<MailContactsRemoveResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -634,8 +762,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, CalendarsModified = parameters }).ToJson();
             string response = Utilities.Post(this.servletEndpoint, payload);
 
-            CalendarsModifiedResult result = response.ParseJson<CalendarsModifiedResult>();
-            this.main.UpdateToken(result.Token);
+            CalendarsModifiedResult result = null;
+            try
+            {
+                result = response.ParseJson<CalendarsModifiedResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -655,8 +791,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, MailList = parameters }).ToJson();
             string response = Utilities.Post(this.servletEndpoint, payload);
 
-            MailListResult result = response.ParseJson<MailListResult>();
-            this.main.UpdateToken(result.Token);
+            MailListResult result = null;
+            try
+            {
+                result = response.ParseJson<MailListResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
@@ -681,39 +825,47 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, MailRead = parameters }).ToJson();
             string response = Utilities.Post(this.servletEndpoint, payload);
 
-            MailReadResult result = response.ParseJson<MailReadResult>();
-            this.main.UpdateToken(result.Token);
-
-            if (fields != null && fields.Length != 0)
+            MailReadResult result = null;
+            try
             {
-                Dictionary<string, object> temp = response.ParseJson<Dictionary<string, object>>();
-                temp = (Dictionary<string, object>)temp["MailRead"];
-                temp = (Dictionary<string, object>)temp["Mail"];
-                result.MailRead.Mail.Fields = new Dictionary<string, string>();
-                foreach (string item in fields)
+                result = response.ParseJson<MailReadResult>();
+                this.main.UpdateToken(result.Token);
+
+                if (fields != null && fields.Length != 0)
                 {
-                    if (temp.ContainsKey(item))
+                    Dictionary<string, object> temp = response.ParseJson<Dictionary<string, object>>();
+                    temp = (Dictionary<string, object>)temp["MailRead"];
+                    temp = (Dictionary<string, object>)temp["Mail"];
+                    result.MailRead.Mail.Fields = new Dictionary<string, string>();
+                    foreach (string item in fields)
                     {
-                        result.MailRead.Mail.Fields.Add(item, (string)temp[item]);
+                        if (temp.ContainsKey(item))
+                        {
+                            result.MailRead.Mail.Fields.Add(item, (string)temp[item]);
+                        }
+                    }
+                }
+
+                if (extraItems != null && extraItems.Length != 0)
+                {
+                    Dictionary<string, object> temp = response.ParseJson<Dictionary<string, object>>();
+                    temp = (Dictionary<string, object>)temp["MailRead"];
+                    temp = (Dictionary<string, object>)temp["Mail"];
+                    temp = (Dictionary<string, object>)temp["ExtraItems"];
+
+                    result.MailRead.Mail.Extraitems = new Dictionary<string, MailReadExtraItem>();
+                    foreach (string item in fields)
+                    {
+                        if (temp.ContainsKey(item))
+                        {
+                            result.MailRead.Mail.Extraitems.Add(item, temp["Subject"].ToJson().ParseJson<MailReadExtraItem>());
+                        }
                     }
                 }
             }
-
-            if (extraItems != null && extraItems.Length != 0)
+            catch (Exception ex)
             {
-                Dictionary<string, object> temp = response.ParseJson<Dictionary<string, object>>();
-                temp = (Dictionary<string, object>)temp["MailRead"];
-                temp = (Dictionary<string, object>)temp["Mail"];
-                temp = (Dictionary<string, object>)temp["ExtraItems"];
-
-                result.MailRead.Mail.Extraitems = new Dictionary<string, MailReadExtraItem>();
-                foreach (string item in fields)
-                {
-                    if (temp.ContainsKey(item))
-                    {
-                        result.MailRead.Mail.Extraitems.Add(item, temp["Subject"].ToJson().ParseJson<MailReadExtraItem>());
-                    }
-                }
+                throw new Exception(response, ex);
             }
 
             return result;
@@ -738,8 +890,16 @@ namespace OnTimeGCApi
             string payload = (new { Main = this.main, MailSend = parameters }).ToJson();
             string response = Utilities.Post(this.servletEndpoint, payload);
 
-            MailSendResult result = response.ParseJson<MailSendResult>();
-            this.main.UpdateToken(result.Token);
+            MailSendResult result = null;
+            try
+            {
+                result = response.ParseJson<MailSendResult>();
+                this.main.UpdateToken(result.Token);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(response, ex);
+            }
 
             return result;
         }
