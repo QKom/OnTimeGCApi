@@ -55,6 +55,7 @@ namespace OnTimeGCApi
             request.Headers.Add("Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3");
             request.Headers.Add("Accept-Encoding: gzip, deflate");
             request.ContentLength = data.Length;
+            request.Timeout = 120000;
             if (referer != "")
             {
                 request.Referer = referer;
@@ -77,6 +78,11 @@ namespace OnTimeGCApi
             }
             catch (WebException ex)
             {
+                if (ex.Response == null)
+                {
+                    throw ex;
+                }
+
                 using (HttpWebResponse response = (HttpWebResponse)ex.Response)
                 using (Stream responseStream = (response.ContentEncoding.ToLower().Contains("gzip") ? new GZipStream(response.GetResponseStream(), CompressionMode.Decompress) : response.GetResponseStream()))
 
