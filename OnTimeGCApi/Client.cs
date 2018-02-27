@@ -871,7 +871,7 @@ namespace OnTimeGCApi
             return result;
         }
 
-        public MailSendResult MailSend(string[] sendTo, string subject, string body, string[] copyTo = null, string[] blindCopyTo = null,  MailSendAttachment[] attachments = null)
+        public MailSendResult MailSend(string[] sendTo, string subject, string body, string[] copyTo = null, string[] blindCopyTo = null, bool signature = false, MailSendAttachment[] attachments = null)
         {
             if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
             if (sendTo == null || sendTo.Length == 0) { throw new ArgumentNullException("sendTo"); }
@@ -882,6 +882,7 @@ namespace OnTimeGCApi
             parameters.Add("SendTo", sendTo);
             parameters.Add("Subject", subject);
             parameters.Add("Body", body);
+            parameters.Add("MailSignature", signature);
 
             if (copyTo != null && copyTo.Length != 0) { parameters.Add("CopyTo", copyTo); }
             if (blindCopyTo != null && blindCopyTo.Length != 0) { parameters.Add("BlindCopyTo", blindCopyTo); }
