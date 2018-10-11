@@ -4,6 +4,7 @@ namespace OnTimeGCApi
     public enum EventType
     {
         Appointment = 0,
+        Anniversary = 1,
         AllDay = 2,
         Meeting = 3,
         Invatation = 4, // = "I"
