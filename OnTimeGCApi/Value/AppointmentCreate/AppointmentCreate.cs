@@ -12,5 +12,10 @@ namespace OnTimeGCApi
         public string StatusKey { get; set; }
         public string StatusText { get; set; }
         public int SectionProcessTime { get; set; }
+
+        public override string ToString()
+        {
+            return $"{{ Status: \"{this.Status}\" | StatusKey: \"{this.StatusKey}\" | StatusText: \"{this.StatusText}\" | NewUnID: \"{this.NewUnID}\" }}";
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace OnTimeGCApi.Test
         [TestMethod]
         public void LoginWithValidCredentials()
         {
-            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath);
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
             LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
 
             Assert.AreEqual(true, result.IsAuthorized);
@@ -28,11 +28,11 @@ namespace OnTimeGCApi.Test
         [TestMethod]
         public void LoginTokenSuccess()
         {
-            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath);
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
             LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
             string token = result.Token;
 
-            client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath);
+            client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
             result = client.Login(token);
 
             Assert.AreEqual(true, result.IsAuthorized);
@@ -43,7 +43,7 @@ namespace OnTimeGCApi.Test
         {
             string token = "a1GPawEEHwfFutIm0tHMWKMlVyMd5NmWi7VzlKeR3bAWJoW9VEJQzXAxJ6BIDBy4T0HdGIvFu2GrRF56xPgO3a";
 
-            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath);
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
             try
             {
                 LoginResult result = client.Login(token);
@@ -60,7 +60,7 @@ namespace OnTimeGCApi.Test
         [TestMethod]
         public void LoginWithWrongCredentials()
         {
-            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath);
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
             try
             {
                 client.Login(Configuration.LoginUser, "demo1");
@@ -77,7 +77,7 @@ namespace OnTimeGCApi.Test
         [TestMethod]
         public void Version()
         {
-            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath);
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
             LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
             if (result.IsAuthorized)
             {
@@ -93,7 +93,7 @@ namespace OnTimeGCApi.Test
         [TestMethod]
         public void UsersAll()
         {
-            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath);
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
             LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
             if (result.IsAuthorized)
             {
@@ -109,7 +109,7 @@ namespace OnTimeGCApi.Test
         [TestMethod]
         public void UsersInfo()
         {
-            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath);
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
             LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
             if (result.IsAuthorized)
             {
@@ -126,12 +126,12 @@ namespace OnTimeGCApi.Test
         [TestMethod]
         public void Calendars()
         {
-            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath);
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
             LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
             if (result.IsAuthorized)
             {
-                CalendarsResult calendarsResult = client.Calendars(DateTime.Now.AddMonths(-1), DateTime.Now.AddMonths(1), onTimeIds: new List<string>() { Configuration.UserId, "10" });
-                Assert.AreEqual(2, calendarsResult.Calendars.IDs.Count);
+                CalendarsResult calendarsResult = client.Calendars(DateTime.Now.AddMonths(-1), DateTime.Now.AddMonths(1), onTimeIds: new List<string>() { Configuration.UserId });
+                Assert.AreEqual(1, calendarsResult.Calendars.IDs.Count);
 
                 return;
             }
@@ -142,7 +142,7 @@ namespace OnTimeGCApi.Test
         [TestMethod]
         public void Logout()
         {
-            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath);
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
             LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
             if (result.IsAuthorized)
             {
@@ -157,7 +157,7 @@ namespace OnTimeGCApi.Test
         [TestMethod]
         public void GroupList()
         {
-            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath);
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
             LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
             if (result.IsAuthorized)
             {
@@ -172,7 +172,7 @@ namespace OnTimeGCApi.Test
         [TestMethod]
         public void GroupUserIds()
         {
-            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath);
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
             LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
             if (result.IsAuthorized)
             {
@@ -193,7 +193,7 @@ namespace OnTimeGCApi.Test
         [TestMethod]
         public void AppointmentCreateChangeDelete()
         {
-            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath);
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
             LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
             if (result.IsAuthorized)
             {

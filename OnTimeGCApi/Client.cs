@@ -139,7 +139,8 @@ namespace OnTimeGCApi
         public LogoutResult Logout()
         {
             string payload = (new { Main = this.main, Logout = (new { }) }).ToJson();
-            string response = Utilities.Post(this.apiEndpoint, payload);
+            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
+            string response = Utilities.Post(endpoint, payload);
 
             LogoutResult result = null;
             try
@@ -162,7 +163,8 @@ namespace OnTimeGCApi
         public VersionResult Version()
         {
             string payload = (new { Main = this.main, Version = (new { }) }).ToJson();
-            string response = Utilities.Post(this.apiEndpoint, payload);
+            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
+            string response = Utilities.Post(endpoint, payload);
 
             VersionResult result = null;
             try
@@ -196,7 +198,8 @@ namespace OnTimeGCApi
             if (excludeIds != null && excludeIds.Count != 0) { parameters.Add("ExcludeIDs", excludeIds); }
 
             string payload = (new { Main = this.main, UsersAll = parameters }).ToJson();
-            string response = Utilities.Post(this.apiEndpoint, payload);
+            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
+            string response = Utilities.Post(endpoint, payload);
 
             UsersAllResult result = null;
             try
@@ -237,7 +240,8 @@ namespace OnTimeGCApi
             if (items != null && items.Count != 0) { parameters.Add("Items", items); }
 
             string payload = (new { Main = this.main, UsersInfo = parameters }).ToJson();
-            string response = Utilities.Post(this.apiEndpoint, payload);
+            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
+            string response = Utilities.Post(endpoint, payload);
 
             UsersInfoResult result = null;
             try
@@ -278,7 +282,8 @@ namespace OnTimeGCApi
             if (shortNames != null && shortNames.Count != 0) { parameters.Add("ShortNames", shortNames); }
 
             string payload = (new { Main = this.main, Calendars = parameters }).ToJson();
-            string response = Utilities.Post(this.apiEndpoint, payload);
+            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
+            string response = Utilities.Post(endpoint, payload);
 
             // workaround for AppointmentType to be compatible with enumerations
             StringBuilder sb = new StringBuilder(response);
@@ -360,7 +365,8 @@ namespace OnTimeGCApi
             if (customFields != null && customFields.Count != 0) { parameters.Add("CustomFields", customFields); }
 
             string payload = (new { Main = this.main, AppointmentCreate = parameters }).ToJson();
-            string response = Utilities.Post(this.apiEndpoint, payload);
+            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
+            string response = Utilities.Post(endpoint, payload);
 
             AppointmentCreateResult result = null;
             try
@@ -431,7 +437,8 @@ namespace OnTimeGCApi
             if (customFields != null && customFields.Count != 0) { parameters.Add("NewCustomFields", customFields); }
 
             string payload = (new { Main = this.main, AppointmentChange = parameters }).ToJson();
-            string response = Utilities.Post(this.apiEndpoint, payload);
+            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
+            string response = Utilities.Post(endpoint, payload);
 
             AppointmentChangeResult result = null;
             try
@@ -470,7 +477,8 @@ namespace OnTimeGCApi
             if (repeatAction != null) { parameters.Add("RepWhich", repeatAction); }
 
             string payload = (new { Main = this.main, AppointmentRemove = parameters }).ToJson();
-            string response = Utilities.Post(this.apiEndpoint, payload);
+            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
+            string response = Utilities.Post(endpoint, payload);
 
             AppointmentRemoveResult result = null;
             try
@@ -503,7 +511,8 @@ namespace OnTimeGCApi
             if (includeShared != null) { parameters.Add("InclShared", includeShared); }
 
             string payload = (new { Main = this.main, GroupList = parameters }).ToJson();
-            string response = Utilities.Post(this.apiEndpoint, payload);
+            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
+            string response = Utilities.Post(endpoint, payload);
 
             GroupListResult result = null;
             try
@@ -532,7 +541,8 @@ namespace OnTimeGCApi
             parameters.Add("GroupID", groupId);
 
             string payload = (new { Main = this.main, GroupUserIDs = parameters }).ToJson();
-            string response = Utilities.Post(this.apiEndpoint, payload);
+            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
+            string response = Utilities.Post(endpoint, payload);
 
             GroupUserIdsResult result = null;
             try
