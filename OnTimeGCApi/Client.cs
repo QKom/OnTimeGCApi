@@ -931,7 +931,7 @@ namespace OnTimeGCApi
 
             public void UpdateToken(string newToken)
             {
-                if (this.APIVer > 4)
+                if (this.APIVer > 4 && newToken != null)
                 {
                     this.Token = newToken;
                 }

@@ -179,9 +179,10 @@ namespace OnTimeGCApi.Test
                 GroupListResult groupListResult = client.GroupList(true, true, true);
                 if (groupListResult.GroupList.Items.Count > 0)
                 {
-                    GroupUserIdsResult groupUserIdsResult = client.GroupUserIds(groupListResult.GroupList.Items[0].ID);
+                    string groupId = groupListResult.GroupList.Items.Find(x => x.ID != null).ID;
+                    GroupUserIdsResult groupUserIdsResult = client.GroupUserIds(groupId);
 
-                    Assert.AreEqual(groupListResult.GroupList.Items[0].ID, groupUserIdsResult.GroupUserIDs.ID);
+                    Assert.AreEqual(groupId, groupUserIdsResult.GroupUserIDs.ID);
                     return;
                 }
                 Assert.Fail("Fetching GroupList");
