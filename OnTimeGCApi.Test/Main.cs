@@ -1,6 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 
 namespace OnTimeGCApi.Test
@@ -13,6 +14,7 @@ namespace OnTimeGCApi.Test
         [AssemblyInitialize()]
         public static void AssemblyInit(TestContext context)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
             Configuration = Settings.Load("settings.json");
         }
 

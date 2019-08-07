@@ -12,7 +12,7 @@ namespace OnTimeGCApi
 
         public override string ToString()
         {
-            return $"{{ Status: {this.Status} | IsAnonymous: {this.IsAnonymous} | ErrorCode: {this.ErrorCode} }}";
+            return $"{{ Status: {this.Status} | IsAnonymous: {this.IsAnonymous} | ErrorCode: {this.ErrorCode} | Error: {this.Error} }}";
         }
     }
 }
