@@ -50,9 +50,14 @@ namespace OnTimeGCApi
 
             request.Method = "POST";
             request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:20.0) Gecko/20100101 Firefox/20.0";
-            request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.Headers.Add("Accept-Language: de-de,de;q=0.8,en-us;q=0.5,en;q=0.3");
+            if (postData.StartsWith("{"))
+            {
+                request.ContentType = "application/json; charset=utf-8";
+            }
+            else
+            {
+                request.ContentType = "application/x-www-form-urlencoded";
+            }
             request.Headers.Add("Accept-Encoding: gzip, deflate");
             request.ContentLength = data.Length;
             request.Timeout = 120000;
