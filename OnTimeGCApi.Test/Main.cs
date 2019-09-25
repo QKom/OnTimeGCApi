@@ -18,6 +18,24 @@ namespace OnTimeGCApi.Test
             Configuration = Settings.Load("settings.json");
         }
 
+        [AssemblyCleanup()]
+        public static void AssemblyCleanup()
+        {
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
+            LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
+            if (result.IsAuthorized)
+            {
+                CalendarsResult calendarsResult = client.Calendars(DateTime.Now.AddMonths(-1), DateTime.Now.AddMonths(1), new List<string>() { Configuration.UserId });
+                foreach (CalendarItem item in calendarsResult.Calendars.IDs[0].Items)
+                {
+                    if (item.Subject.StartsWith("UnitTest123"))
+                    {
+                        AppointmentRemoveResult appointmentRemoveResult = client.AppointmentRemove(Configuration.UserId, item.UnID);
+                    }
+                }
+            }
+        }
+
         [TestMethod]
         public void LoginWithValidCredentials()
         {
@@ -201,11 +219,47 @@ namespace OnTimeGCApi.Test
             if (result.IsAuthorized)
             {
                 DateTime baseValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 12, 0, 0, DateTimeKind.Utc);
-                AppointmentCreateResult appointmentCreateResult = client.AppointmentCreate(EventType.Appointment, Configuration.UserId, baseValue, baseValue.AddMinutes(30), "TestSubject1");
+                AppointmentCreateResult appointmentCreateResult = client.AppointmentCreate(EventType.Appointment, Configuration.UserId, baseValue, baseValue.AddMinutes(30), "UnitTest123");
                 Assert.AreEqual("OK", appointmentCreateResult.AppointmentCreate.Status);
 
-                AppointmentChangeResult appointmentChangeResult = client.AppointmentChange(Configuration.UserId, appointmentCreateResult.AppointmentCreate.NewUnID, baseValue, baseValue.AddHours(1), subject: "TestSubject2");
+                AppointmentChangeResult appointmentChangeResult = client.AppointmentChange(Configuration.UserId, appointmentCreateResult.AppointmentCreate.NewUnID, baseValue, baseValue.AddHours(1), subject: "UnitTest123");
                 Assert.AreEqual("OK", appointmentChangeResult.AppointmentChange.Status);
+
+                AppointmentRemoveResult appointmentRemoveResult = client.AppointmentRemove(Configuration.UserId, appointmentCreateResult.AppointmentCreate.NewUnID);
+                Assert.AreEqual("OK", appointmentRemoveResult.AppointmentRemove.Status);
+
+                return;
+            }
+
+            Assert.Fail("Login failed.");
+        }
+
+        [TestMethod]
+        public void AppointmentCreateAllDay()
+        {
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
+            LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
+            if (result.IsAuthorized)
+            {
+                DateTime baseValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 22, 0, 0, DateTimeKind.Utc).AddDays(-1);
+                AppointmentCreateResult appointmentCreateResult = client.AppointmentCreate(EventType.AllDay, Configuration.UserId, baseValue, baseValue.AddDays(1), "UnitTest123");
+                Assert.AreEqual("OK", appointmentCreateResult.AppointmentCreate.Status);
+                Thread.Sleep(1000);
+
+                bool found = false;
+                CalendarsResult calendarsResult = client.Calendars(baseValue.AddDays(-1), baseValue.AddDays(1), new List<string>() { Configuration.UserId });
+                foreach (CalendarItem item in calendarsResult.Calendars.IDs[0].Items)
+                {
+                    if (item.UnID == appointmentCreateResult.AppointmentCreate.NewUnID)
+                    {
+                        found = true;
+                        Assert.AreEqual("UnitTest123 [by OnTime ApiExplorer]", item.Subject);
+                        Assert.AreEqual(EventType.AllDay, item.ApptType);
+                        Assert.AreEqual(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, DateTimeKind.Local), item.StartDT);
+                        Assert.AreEqual(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 22, 0, 0, DateTimeKind.Utc).AddDays(-1), item.StartDT.ToUniversalTime());
+                    }
+                }
+                Assert.AreEqual(true, found, "AllDay event not found");
 
                 AppointmentRemoveResult appointmentRemoveResult = client.AppointmentRemove(Configuration.UserId, appointmentCreateResult.AppointmentCreate.NewUnID);
                 Assert.AreEqual("OK", appointmentRemoveResult.AppointmentRemove.Status);

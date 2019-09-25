@@ -365,6 +365,23 @@ namespace OnTimeGCApi
             if (customFields != null && customFields.Count != 0) { parameters.Add("CustomFields", customFields); }
 
             string payload = (new { Main = this.main, AppointmentCreate = parameters }).ToJson();
+
+            // workaround for AppointmentType to be compatible with enumerations
+            StringBuilder sb = new StringBuilder(payload);
+            sb.Replace("\"AppType\":0", "\"AppType\":\"0\"");
+            sb.Replace("\"AppType\":1", "\"AppType\":\"1\"");
+            sb.Replace("\"AppType\":2", "\"AppType\":\"2\"");
+            sb.Replace("\"AppType\":3", "\"AppType\":\"3\"");
+            sb.Replace("\"AppType\":4", "\"AppType\":\"I\"");
+            sb.Replace("\"AppType\":5", "\"AppType\":\"C\"");
+            sb.Replace("\"AppType\":6", "\"AppType\":\"U\"");
+            sb.Replace("\"AppType\":7", "\"AppType\":\"N\"");
+            sb.Replace("\"AppType\":8", "\"AppType\":\"E\"");
+            sb.Replace("\"AppType\":9", "\"AppType\":\"S\"");
+            sb.Replace("\"AppType\":10", "\"AppType\":\"T\"");
+            sb.Replace("\"AppType\":11", "\"AppType\":\"R\"");
+            payload = sb.ToString();
+
             Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
             string response = Utilities.Post(endpoint, payload);
 
