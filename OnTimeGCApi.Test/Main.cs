@@ -293,7 +293,7 @@ namespace OnTimeGCApi.Test
             LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
             if (result.IsAuthorized)
             {
-                MailContactsCreateResult mailContactsCreateResult = client.MailContactCreate(Configuration.UserId, "Herr Hans Test", "hans.test@foo.de", title: "Herr", additionalFields: new Dictionary<string, string>() { { "Foo", "Bar" } });
+                MailContactsCreateResult mailContactsCreateResult = client.MailContactCreate(Configuration.UserId, "hans.test@foo.de", title: "Herr", firstName: "Hans", lastName: "Test", additionalFields: new Dictionary<string, string>() { { "Foo", "Bar" } });
                 Assert.AreEqual("OK", mailContactsCreateResult.Status);
 
                 MailContactsChangeResult mailContactsChangeResult = client.MailContactsChange(Configuration.UserId, mailContactsCreateResult.MailContactsCreate.Contact.UnID, additionalFields: new Dictionary<string, string>() { { "Foo", "FooBar" } });

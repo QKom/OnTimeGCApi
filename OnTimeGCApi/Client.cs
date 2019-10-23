@@ -618,19 +618,19 @@ namespace OnTimeGCApi
             return result;
         }
 
-        public MailContactsCreateResult MailContactCreate(string userId, string fullName, string mailAddress, string title = null, string companyName = null, string department = null, string jobTitle = null, string officePhoneNumber = null, string cellPhoneNumber = null, List<string> categories = null, Dictionary<string, string> additionalFields = null)
+        public MailContactsCreateResult MailContactCreate(string userId, string emailAddress, string title = null, string firstName = null, string lastName = null, string companyName = null, string department = null, string jobTitle = null, string officePhoneNumber = null, string cellPhoneNumber = null, List<string> categories = null, Dictionary<string, string> additionalFields = null)
         {
             if (this.servletPath == null) { throw new NullReferenceException("servletPath is null"); }
             if (userId == null) { throw new ArgumentNullException("userId"); }
-            if (fullName == null) { throw new ArgumentNullException("fullName"); }
-            if (mailAddress == null) { throw new ArgumentNullException("mailAddress"); }
+            if (emailAddress == null) { throw new ArgumentNullException("emailAddress"); }
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
             parameters.Add("UserID", userId);
-            parameters.Add("FullName", fullName);
-            parameters.Add("MailAddress", mailAddress);
+            parameters.Add("MailAddress", emailAddress);
 
             if (title != null) { parameters.Add("Title", title); }
+            if (firstName != null) { parameters.Add("FirstName", firstName); }
+            if (lastName != null) { parameters.Add("LastName", lastName); }
             if (companyName != null) { parameters.Add("CompanyName", companyName); }
             if (department != null) { parameters.Add("Department", department); }
             if (jobTitle != null) { parameters.Add("JobTitle", jobTitle); }
