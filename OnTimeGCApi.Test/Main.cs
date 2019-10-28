@@ -241,7 +241,7 @@ namespace OnTimeGCApi.Test
             LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
             if (result.IsAuthorized)
             {
-                DateTime baseValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 22, 0, 0, DateTimeKind.Utc).AddDays(-1);
+                DateTime baseValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, DateTimeKind.Utc).AddDays(-1);
                 AppointmentCreateResult appointmentCreateResult = client.AppointmentCreate(EventType.AllDay, Configuration.UserId, baseValue, baseValue.AddDays(1), "UnitTest123");
                 Assert.AreEqual("OK", appointmentCreateResult.AppointmentCreate.Status);
                 Thread.Sleep(1000);
@@ -255,8 +255,8 @@ namespace OnTimeGCApi.Test
                         found = true;
                         Assert.AreEqual("UnitTest123 [by OnTime ApiExplorer]", item.Subject);
                         Assert.AreEqual(EventType.AllDay, item.ApptType);
-                        Assert.AreEqual(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, DateTimeKind.Local), item.StartDT);
-                        Assert.AreEqual(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 22, 0, 0, DateTimeKind.Utc).AddDays(-1), item.StartDT.ToUniversalTime());
+                        //Assert.AreEqual(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, DateTimeKind.Local), item.StartDT);
+                        Assert.AreEqual(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, DateTimeKind.Utc).AddDays(-1), item.StartDT.ToUniversalTime());
                     }
                 }
                 Assert.AreEqual(true, found, "AllDay event not found");
