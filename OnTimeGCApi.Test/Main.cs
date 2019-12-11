@@ -95,6 +95,22 @@ namespace OnTimeGCApi.Test
         }
 
         [TestMethod]
+        public void GenerateTokenOnBehalfOf()
+        {
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
+            LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
+            if (result.IsAuthorized)
+            {
+                GetTokenResult getTokenResult = client.GenerateTokenOnBehalfOf(Configuration.GenerateTokenOnBehalfOf);
+                Assert.AreEqual("OK", getTokenResult.Status);
+
+                return;
+            }
+
+            Assert.Fail("Login failed.");
+        }
+
+        [TestMethod]
         public void Version()
         {
             Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
@@ -253,7 +269,7 @@ namespace OnTimeGCApi.Test
                     if (item.UnID == appointmentCreateResult.AppointmentCreate.NewUnID)
                     {
                         found = true;
-                        Assert.AreEqual("UnitTest123 [by OnTime ApiExplorer]", item.Subject);
+                        Assert.AreEqual("UnitTest123", item.Subject);
                         Assert.AreEqual(EventType.AllDay, item.ApptType);
                         //Assert.AreEqual(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, DateTimeKind.Local), item.StartDT);
                         Assert.AreEqual(new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 0, 0, 0, DateTimeKind.Utc).AddDays(-1), item.StartDT.ToUniversalTime());

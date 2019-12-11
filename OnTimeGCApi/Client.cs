@@ -14,7 +14,6 @@ namespace OnTimeGCApi
         private string domain;
         private string apiPath;
         private string servletPath;
-        private Uri apiEndpoint;
         private Uri servletEndpoint;
 
         /// <summary>
@@ -26,17 +25,14 @@ namespace OnTimeGCApi
         /// <param name="domain"></param>
         /// <param name="apiPath"></param>
         /// <param name="servletPath"></param>
-        public Client(string applicationId, string applicationVersion, int apiVersion, string domain, string apiPath, string servletPath = null)
+        public Client(string applicationId, string applicationVersion, int apiVersion, string domain, string apiPath, string servletPath)
         {
+
             this.main = new OtBase(applicationId, applicationVersion, apiVersion);
             this.domain = domain;
             this.apiPath = apiPath;
             this.servletPath = servletPath;
-            this.apiEndpoint = new Uri($"{this.domain}{this.apiPath}/apihttp");
-            if (this.servletPath != null)
-            {
-                this.servletEndpoint = new Uri($"{this.domain}{this.servletPath}");
-            }
+            this.servletEndpoint = new Uri($"{this.domain}{this.servletPath}");
         }
 
         /// <summary>
@@ -77,7 +73,7 @@ namespace OnTimeGCApi
 
             // login
             payload = (new { Main = this.main, Login = (new { }) }).ToJson();
-            response = Utilities.Post(this.apiEndpoint, payload, ref cc);
+            response = Utilities.Post(this.servletEndpoint, payload, ref cc);
 
             LoginResult result = response.ParseJson<LoginResult>();
             if (result.Status != "OK")
@@ -96,7 +92,7 @@ namespace OnTimeGCApi
 
             // login
             string payload = (new { Main = this.main, Login = (new { }) }).ToJson();
-            string response = Utilities.Post(this.apiEndpoint, payload);
+            string response = Utilities.Post(this.servletEndpoint, payload);
 
             LoginResult result = response.ParseJson<LoginResult>();
             if (result.Status != "OK")
@@ -116,7 +112,7 @@ namespace OnTimeGCApi
 
             string payload = (new { Main = this.main, GetToken = parameters }).ToJson();
             payload = payload.Replace("{\"Main\":{", $"{{\"Main\":{{\"OnBehalfOf\":\"{emailAddress}\",");
-            string response = Utilities.Post(this.apiEndpoint, payload);
+            string response = Utilities.Post(this.servletEndpoint, payload);
 
             GetTokenResult result = null;
             try
@@ -139,8 +135,7 @@ namespace OnTimeGCApi
         public LogoutResult Logout()
         {
             string payload = (new { Main = this.main, Logout = (new { }) }).ToJson();
-            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
-            string response = Utilities.Post(endpoint, payload);
+            string response = Utilities.Post(this.servletEndpoint, payload);
 
             LogoutResult result = null;
             try
@@ -163,8 +158,7 @@ namespace OnTimeGCApi
         public VersionResult Version()
         {
             string payload = (new { Main = this.main, Version = (new { }) }).ToJson();
-            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
-            string response = Utilities.Post(endpoint, payload);
+            string response = Utilities.Post(this.servletEndpoint, payload);
 
             VersionResult result = null;
             try
@@ -198,8 +192,7 @@ namespace OnTimeGCApi
             if (excludeIds != null && excludeIds.Count != 0) { parameters.Add("ExcludeIDs", excludeIds); }
 
             string payload = (new { Main = this.main, UsersAll = parameters }).ToJson();
-            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
-            string response = Utilities.Post(endpoint, payload);
+            string response = Utilities.Post(this.servletEndpoint, payload);
 
             UsersAllResult result = null;
             try
@@ -240,8 +233,7 @@ namespace OnTimeGCApi
             if (items != null && items.Count != 0) { parameters.Add("Items", items); }
 
             string payload = (new { Main = this.main, UsersInfo = parameters }).ToJson();
-            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
-            string response = Utilities.Post(endpoint, payload);
+            string response = Utilities.Post(this.servletEndpoint, payload);
 
             UsersInfoResult result = null;
             try
@@ -282,8 +274,7 @@ namespace OnTimeGCApi
             if (shortNames != null && shortNames.Count != 0) { parameters.Add("ShortNames", shortNames); }
 
             string payload = (new { Main = this.main, Calendars = parameters }).ToJson();
-            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
-            string response = Utilities.Post(endpoint, payload);
+            string response = Utilities.Post(this.servletEndpoint, payload);
 
             // workaround for AppointmentType to be compatible with enumerations
             StringBuilder sb = new StringBuilder(response);
@@ -325,11 +316,11 @@ namespace OnTimeGCApi
         /// <param name="isPrivate"></param>
         /// <param name="isAvailable"></param>
         /// <param name="body">Body text in plain text. \n = newline, \t = horizontal tab, \\ = backslash</param>
-        /// <param name="requiredAttendees">Requried attendees for meeting, only applicable for AppType=Meeting</param>
-        /// <param name="optionalAttendees">Optional attendees for meeting, only applicable for AppType=Meeting</param>
-        /// <param name="fyiAttendees">FYI attendees for meeting, only applicable for AppType=Meeting</param>
-        /// <param name="requiredRooms">Requried rooms for meeting, only applicable for AppType=Meeting</param>
-        /// <param name="requiredResources">Requried resources for meeting, only applicable for AppType=Meeting</param>
+        /// <param name="requiredAttendees">Requried attendees for meeting, only applicable for AppointmentType=Meeting</param>
+        /// <param name="optionalAttendees">Optional attendees for meeting, only applicable for AppointmentType=Meeting</param>
+        /// <param name="fyiAttendees">FYI attendees for meeting, only applicable for AppointmentType=Meeting</param>
+        /// <param name="requiredRooms">Requried rooms for meeting, only applicable for AppointmentType=Meeting</param>
+        /// <param name="requiredResources">Requried resources for meeting, only applicable for AppointmentType=Meeting</param>
         /// <param name="repeatDates">separated list of repeat dates for a repeating appointment, meeting or allday. If supplied the time component (of meetings and appointments) will be combined with the supplied dates from this field to form the meeting/appointment date/times.</param>
         /// <param name="customFields"></param>
         /// <returns></returns>
@@ -347,7 +338,7 @@ namespace OnTimeGCApi
             if (type != EventType.Meeting && requiredResources != null && requiredResources.Count != 0) { throw new ArgumentException("\"requiredResources\" only applicable for Meetings"); }
 
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("AppType", type);
+            parameters.Add("AppointmentType", type);
             parameters.Add("UserID", userId);
             parameters.Add("StartDT", start.ToUniversalTime().ToString(DATETIME_FORMATTER));
             parameters.Add("EndDT", end.ToUniversalTime().ToString(DATETIME_FORMATTER));
@@ -368,22 +359,21 @@ namespace OnTimeGCApi
 
             // workaround for AppointmentType to be compatible with enumerations
             StringBuilder sb = new StringBuilder(payload);
-            sb.Replace("\"AppType\":0", "\"AppType\":\"0\"");
-            sb.Replace("\"AppType\":1", "\"AppType\":\"1\"");
-            sb.Replace("\"AppType\":2", "\"AppType\":\"2\"");
-            sb.Replace("\"AppType\":3", "\"AppType\":\"3\"");
-            sb.Replace("\"AppType\":4", "\"AppType\":\"I\"");
-            sb.Replace("\"AppType\":5", "\"AppType\":\"C\"");
-            sb.Replace("\"AppType\":6", "\"AppType\":\"U\"");
-            sb.Replace("\"AppType\":7", "\"AppType\":\"N\"");
-            sb.Replace("\"AppType\":8", "\"AppType\":\"E\"");
-            sb.Replace("\"AppType\":9", "\"AppType\":\"S\"");
-            sb.Replace("\"AppType\":10", "\"AppType\":\"T\"");
-            sb.Replace("\"AppType\":11", "\"AppType\":\"R\"");
+            sb.Replace("\"AppointmentType\":0", "\"AppointmentType\":\"0\"");
+            sb.Replace("\"AppointmentType\":1", "\"AppointmentType\":\"1\"");
+            sb.Replace("\"AppointmentType\":2", "\"AppointmentType\":\"2\"");
+            sb.Replace("\"AppointmentType\":3", "\"AppointmentType\":\"3\"");
+            sb.Replace("\"AppointmentType\":4", "\"AppointmentType\":\"I\"");
+            sb.Replace("\"AppointmentType\":5", "\"AppointmentType\":\"C\"");
+            sb.Replace("\"AppointmentType\":6", "\"AppointmentType\":\"U\"");
+            sb.Replace("\"AppointmentType\":7", "\"AppointmentType\":\"N\"");
+            sb.Replace("\"AppointmentType\":8", "\"AppointmentType\":\"E\"");
+            sb.Replace("\"AppointmentType\":9", "\"AppointmentType\":\"S\"");
+            sb.Replace("\"AppointmentType\":10", "\"AppointmentType\":\"T\"");
+            sb.Replace("\"AppointmentType\":11", "\"AppointmentType\":\"R\"");
             payload = sb.ToString();
 
-            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
-            string response = Utilities.Post(endpoint, payload);
+            string response = Utilities.Post(this.servletEndpoint, payload);
 
             AppointmentCreateResult result = null;
             try
@@ -454,8 +444,7 @@ namespace OnTimeGCApi
             if (customFields != null && customFields.Count != 0) { parameters.Add("NewCustomFields", customFields); }
 
             string payload = (new { Main = this.main, AppointmentChange = parameters }).ToJson();
-            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
-            string response = Utilities.Post(endpoint, payload);
+            string response = Utilities.Post(this.servletEndpoint, payload);
 
             AppointmentChangeResult result = null;
             try
@@ -494,8 +483,7 @@ namespace OnTimeGCApi
             if (repeatAction != null) { parameters.Add("RepWhich", repeatAction); }
 
             string payload = (new { Main = this.main, AppointmentRemove = parameters }).ToJson();
-            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
-            string response = Utilities.Post(endpoint, payload);
+            string response = Utilities.Post(this.servletEndpoint, payload);
 
             AppointmentRemoveResult result = null;
             try
@@ -528,8 +516,7 @@ namespace OnTimeGCApi
             if (includeShared != null) { parameters.Add("InclShared", includeShared); }
 
             string payload = (new { Main = this.main, GroupList = parameters }).ToJson();
-            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
-            string response = Utilities.Post(endpoint, payload);
+            string response = Utilities.Post(this.servletEndpoint, payload);
 
             GroupListResult result = null;
             try
@@ -558,8 +545,7 @@ namespace OnTimeGCApi
             parameters.Add("GroupID", groupId);
 
             string payload = (new { Main = this.main, GroupUserIDs = parameters }).ToJson();
-            Uri endpoint = (this.servletEndpoint ?? this.apiEndpoint);
-            string response = Utilities.Post(endpoint, payload);
+            string response = Utilities.Post(this.servletEndpoint, payload);
 
             GroupUserIdsResult result = null;
             try
