@@ -78,7 +78,7 @@ namespace OnTimeGCApi
             LoginResult result = response.ParseJson<LoginResult>();
             if (result.Status != "OK")
             {
-                throw new Exception($"Login failed | [{baseResult.ErrorCode}] {baseResult.Error}");
+                throw new Exception($"Login failed | [{result.ErrorCode}] {result.Error}");
             }
 
             this.main.UpdateToken(result.Token);
