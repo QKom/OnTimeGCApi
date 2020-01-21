@@ -104,6 +104,10 @@ namespace OnTimeGCApi.Test
                 GetTokenResult getTokenResult = client.GenerateTokenOnBehalfOf(Configuration.GenerateTokenOnBehalfOf);
                 Assert.AreEqual("OK", getTokenResult.Status);
 
+                result = client.Login(getTokenResult.GetToken.Token);
+                Assert.AreEqual("OK", result.Status);
+                Assert.AreEqual(Configuration.GenerateTokenOnBehalfOf, result.Login.User.Email.ToLower());
+
                 return;
             }
 
