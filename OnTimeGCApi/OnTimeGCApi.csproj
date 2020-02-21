@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>OnTimeGCApi</AssemblyName>
+    <PackageId>OnTimeGCApi</PackageId>
+    <Version>2.0.0.0</Version>
+    <Authors>Oliver Haucke</Authors>
+    <Copyright>QKom GmbH</Copyright>
+    <Company>QKom GmbH</Company>
+    
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <OutputPath>..\bin\$(Configuration)</OutputPath>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+</Project>
