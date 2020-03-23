@@ -108,7 +108,7 @@ namespace OnTimeGCApi
         public GetTokenResult GenerateTokenOnBehalfOf(string emailAddress)
         {
             Dictionary<string, object> parameters = new Dictionary<string, object>();
-            parameters.Add("ClientTime", DateTime.UtcNow.AddMinutes(5).ToString(DATETIME_FORMATTER));
+            parameters.Add("ClientTime", DateTime.UtcNow.ToString(DATETIME_FORMATTER));
 
             string payload = (new { Main = this.main, GetToken = parameters }).ToJson();
             payload = payload.Replace("{\"Main\":{", $"{{\"Main\":{{\"OnBehalfOf\":\"{emailAddress}\",");
