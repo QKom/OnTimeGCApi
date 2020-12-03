@@ -17,6 +17,7 @@ namespace OnTimeGCApi.Test
         public string LoginUser { get; set; }
         public string LoginPass { get; set; }
         public string GenerateTokenOnBehalfOf { get; set; }
+        public string APIToken { get; set; }
 
         public static Settings Load(string filePath)
         {

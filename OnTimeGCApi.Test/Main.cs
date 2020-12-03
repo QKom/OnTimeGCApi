@@ -107,6 +107,28 @@ namespace OnTimeGCApi.Test
                 result = client.Login(getTokenResult.GetToken.Token);
                 Assert.AreEqual("OK", result.Status);
                 Assert.AreEqual(Configuration.GenerateTokenOnBehalfOf, result.Login.User.Email.ToLower());
+                Assert.AreEqual(false, string.IsNullOrWhiteSpace(result.Token));
+
+                return;
+            }
+
+            Assert.Fail("Login failed.");
+        }
+
+        [TestMethod]
+        public void GenerateTokenOnBehalfOfAPIToken()
+        {
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
+            LoginResult result = client.Login(Configuration.APIToken);
+            if (result.IsAuthorized)
+            {
+                GetTokenResult getTokenResult = client.GenerateTokenOnBehalfOf(Configuration.GenerateTokenOnBehalfOf);
+                Assert.AreEqual("OK", getTokenResult.Status);
+
+                result = client.Login(getTokenResult.GetToken.Token);
+                Assert.AreEqual("OK", result.Status);
+                Assert.AreEqual(Configuration.GenerateTokenOnBehalfOf, result.Login.User.Email.ToLower());
+                Assert.AreEqual(false, string.IsNullOrWhiteSpace(result.Token));
 
                 return;
             }
