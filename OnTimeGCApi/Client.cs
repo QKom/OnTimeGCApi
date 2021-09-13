@@ -343,6 +343,8 @@ namespace OnTimeGCApi
             parameters.Add("StartDT", start.ToUniversalTime().ToString(DATETIME_FORMATTER));
             parameters.Add("EndDT", end.ToUniversalTime().ToString(DATETIME_FORMATTER));
             parameters.Add("Subject", subject);
+            parameters.Add("Private", isPrivate);
+            parameters.Add("Available", isAvailable);
 
             if (location != null) { parameters.Add("Location", location); }
             if (categories != null && categories.Count != 0) { parameters.Add("Categories", categories); }
