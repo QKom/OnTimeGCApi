@@ -254,6 +254,40 @@ namespace OnTimeGCApi.Test
         }
 
         [TestMethod]
+        public void AppointmentCustomData()
+        {
+            Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
+            LoginResult result = client.Login(Configuration.LoginUser, Configuration.LoginPass);
+            if (result.IsAuthorized)
+            {
+                DateTime baseValue = new DateTime(DateTime.Now.Year, DateTime.Now.Month, DateTime.Now.Day, 12, 0, 0, DateTimeKind.Utc);
+                AppointmentCreateResult appointmentCreateResult = client.AppointmentCreate(EventType.Appointment, Configuration.UserId, baseValue, baseValue.AddMinutes(30), "UnitTest123", customFields: new Dictionary<string, object>() { { "foo", "bar" } });
+                Assert.AreEqual("OK", appointmentCreateResult.AppointmentCreate.Status);
+                Thread.Sleep(1000);
+
+                bool found = false;
+                CalendarsResult calendarsResult = client.Calendars(baseValue.AddDays(-1), baseValue.AddDays(1), new List<string>() { Configuration.UserId });
+                foreach (CalendarItem item in calendarsResult.Calendars.IDs[0].Items)
+                {
+                    if (item.UnID == appointmentCreateResult.AppointmentCreate.NewUnID)
+                    {
+                        found = true;
+                        Assert.AreEqual("UnitTest123", item.Subject);
+                        Assert.AreEqual(EventType.Appointment, item.ApptType);
+                        Assert.AreEqual(baseValue, item.StartDT.ToUniversalTime());
+                        Assert.AreEqual("bar", item.CustomFields["foo"]);
+                    }
+                }
+                Assert.AreEqual(true, found, "Test appointment not found");
+
+
+                return;
+            }
+
+            Assert.Fail("Login failed.");
+        }
+
+        [TestMethod]
         public void AppointmentCreateChangeDelete()
         {
             Client client = new Client(Configuration.ApplicationId, Configuration.ApplicationVersion, Configuration.ApiVersion, Configuration.Domain, Configuration.ApiPath, Configuration.ServletPath);
