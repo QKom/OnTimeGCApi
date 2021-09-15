@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>OnTimeGCApi</id>
+    <version>$version$</version>
+    <authors>Oliver Haucke</authors>
+    <owners>QKom GmbH</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <projectUrl>https://github.com/QKom/QKom.Utilities</projectUrl>
+    <description>OnTimeGCApi</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright 2021</copyright>
+    <tags>OnTimeGCApi</tags>
+    <repository type="git" url="https://github.com/QKom/OnTimeGCApi"  />
+  </metadata>
+  <files>
+    <file src="bin\Release\OnTimeGCApi.dll" target="lib\net45" />
+    <file src="bin\Release\OnTimeGCApi.pdb" target="lib\net45" />
+    <file src="bin\Release\OnTimeGCApi.xml" target="lib\net45" />
+  </files>
+</package>
